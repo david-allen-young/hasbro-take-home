@@ -1,7 +1,10 @@
 #include "LayeredAttributes.hpp"
+#include <stdexcept>
 
-LayeredAttributes::LayeredAttributes()
+LayeredAttributes::LayeredAttributes(bool shouldLogErrors, bool shouldThrowErrors)
 {
+	errorLoggingEnabled = shouldLogErrors;
+	errorHandlingEnabled = shouldThrowErrors;
 	baseAttributes.fill(0);
 	currentAttributes.fill(0);
 }
@@ -28,7 +31,17 @@ int LayeredAttributes::GetCurrentAttribute(AttributeKey attribute) const
 //applied in the same order they were added. (see LayeredEffectDefinition.Layer)
 void LayeredAttributes::AddLayeredEffect(LayeredEffectDefinition effect)
 {
+	bool shouldRecalculate = effect.Layer < lowestLayer;
+	lowestLayer = std::min(lowestLayer, effect.Layer);
 	layeredEffects[effect.Layer].push_back(effect);
+	if (shouldRecalculate)
+	{
+		recalculateCurrentAttributes();
+	}
+	else
+	{
+		updateCurrentAttributes(effect);
+	}
 }
 
 //Removes all layered effects from this object. After this call,
@@ -39,4 +52,58 @@ void LayeredAttributes::ClearLayeredEffects()
 	//minHeap.swap(emptyHeap);
 	layeredEffects.clear();
 	currentAttributes = baseAttributes;
+}
+
+void LayeredAttributes::recalculateCurrentAttributes()
+{
+	currentAttributes = baseAttributes;
+	// TODO: iterate map, recalculate layer by layer
+}
+
+void LayeredAttributes::updateCurrentAttributes(const LayeredEffectDefinition& effect)
+{
+	if (effect.Operation == EffectOperation::EffectOperation_Set)
+	{
+		currentAttributes[effect.Attribute] = effect.Modification;
+	}
+	else if (effect.Operation == EffectOperation::EffectOperation_Add)
+	{
+		currentAttributes[effect.Attribute] += effect.Modification;
+	}
+	else if (effect.Operation == EffectOperation::EffectOperation_Subtract)
+	{
+		currentAttributes[effect.Attribute] -= effect.Modification;
+	}
+	else if (effect.Operation == EffectOperation::EffectOperation_Multiply)
+	{
+		currentAttributes[effect.Attribute] *= effect.Modification;
+	}
+	else if (effect.Operation == EffectOperation::EffectOperation_BitwiseOr)
+	{
+		currentAttributes[effect.Attribute] |= effect.Modification;
+	}
+	else if (effect.Operation == EffectOperation::EffectOperation_BitwiseAnd)
+	{
+		currentAttributes[effect.Attribute] &= effect.Modification;
+	}
+	else if (effect.Operation == EffectOperation::EffectOperation_BitwiseXor)
+	{
+		currentAttributes[effect.Attribute] ^= effect.Modification;
+	}
+	else //if (effect.Operation == EffectOperation::EffectOperation_Invalid)
+	{
+		if (errorLoggingEnabled)
+		{
+			logError(effect);
+		}
+		if (errorHandlingEnabled)
+		{
+			throw std::runtime_error("Invalid effect operation");
+		}
+	}
+}
+
+void LayeredAttributes::logError([[maybe_unused]] LayeredEffectDefinition effect)
+{
+	// Imagine that this method writes something useful to glog or similar logging service
 }
