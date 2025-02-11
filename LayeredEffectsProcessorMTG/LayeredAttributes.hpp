@@ -1,6 +1,7 @@
 #pragma once
 #include "ILayeredAttributes.hpp"
 #include <queue>
+#include <array>
 
 class LayeredAttributes : public ILayeredAttributes
 {
@@ -12,8 +13,9 @@ public:
     void AddLayeredEffect(LayeredEffectDefinition effect) override;
     void ClearLayeredEffects() override;
 private:
-	static const int NumAttributes = AttributeKey::AttributeKey_Controller + 1;
-	int baseAttributes[NumAttributes] = {};
+	static const size_t NumAttributes = AttributeKey::AttributeKey_Controller + 1;
+	std::array<int, NumAttributes> baseAttributes;
+	std::array<int, NumAttributes> currentAttributes;
 	using Effect = LayeredEffectDefinition;
 	struct EffectCmp
 	{
