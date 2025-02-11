@@ -135,7 +135,7 @@
   <ItemGroup>
     <ClInclude Include="ILayeredAttributes.hpp" />
     <ClInclude Include="LayeredAttributes.hpp" />
-    <ClInclude Include="LayeredAttributesUnitTests.h" />
+    <ClInclude Include="LayeredAttributesUnitTests.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
