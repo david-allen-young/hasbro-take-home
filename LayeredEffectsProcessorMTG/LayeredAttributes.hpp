@@ -18,7 +18,7 @@ private:
 	static const size_t NumAttributes = AttributeKey::AttributeKey_Controller + 1;
 	std::array<int, NumAttributes> baseAttributes;
 	std::array<int, NumAttributes> currentAttributes;
-	using Effect = LayeredEffectDefinition;
+	//using Effect = LayeredEffectDefinition;
 	//struct EffectCmp
 	//{
 	//	bool operator()(std::pair<Effect, int> lhs, std::pair<Effect, int> rhs) const
@@ -30,5 +30,5 @@ private:
 	//	}
 	//};
 	//std::priority_queue<std::pair<Effect, int>, std::vector<std::pair<Effect, int>>, EffectCmp> minHeap;
-	std::map<int, std::vector<Effect>> layeredEffects;
+	std::map<int, std::vector<LayeredEffectDefinition>> layeredEffects;
 };
