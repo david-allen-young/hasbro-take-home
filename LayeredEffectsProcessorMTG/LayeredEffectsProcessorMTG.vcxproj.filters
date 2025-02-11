@@ -23,5 +23,8 @@
     <ClInclude Include="ILayeredAttributes.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="LayeredAttributes.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
