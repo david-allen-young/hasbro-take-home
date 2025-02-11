@@ -130,11 +130,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="LayeredAttributes.cpp" />
-    <ClCompile Include="LayeredEffectsProcessorMTG.cpp" />
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ILayeredAttributes.hpp" />
     <ClInclude Include="LayeredAttributes.hpp" />
+    <ClInclude Include="LayeredAttributesUnitTests.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
