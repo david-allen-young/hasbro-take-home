@@ -57,7 +57,13 @@ void LayeredAttributes::ClearLayeredEffects()
 void LayeredAttributes::recalculateCurrentAttributes()
 {
 	currentAttributes = baseAttributes;
-	// TODO: iterate map, recalculate layer by layer
+	for (auto& [layer, effects] : layeredEffects)
+	{
+		for (auto& effect : effects)
+		{
+			updateCurrentAttributes(effect);
+		}
+	}
 }
 
 void LayeredAttributes::updateCurrentAttributes(const LayeredEffectDefinition& effect)
