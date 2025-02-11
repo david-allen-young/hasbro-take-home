@@ -5,7 +5,12 @@
 class LayeredAttributes : public ILayeredAttributes
 {
 public:
+	LayeredAttributes();
 	virtual ~LayeredAttributes() = default;
+	void SetBaseAttribute(AttributeKey attribute, int value) override;
+    int GetCurrentAttribute(AttributeKey attribute) const override;
+    void AddLayeredEffect(LayeredEffectDefinition effect) override;
+    void ClearLayeredEffects() override;
 private:
 	using Effect = LayeredEffectDefinition;
 	struct EffectCmp
