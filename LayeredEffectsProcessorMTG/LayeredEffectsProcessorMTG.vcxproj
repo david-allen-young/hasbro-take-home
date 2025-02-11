@@ -131,6 +131,9 @@
   <ItemGroup>
     <ClCompile Include="LayeredEffectsProcessorMTG.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ILayeredAttributes.hpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
