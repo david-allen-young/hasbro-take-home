@@ -12,7 +12,8 @@ public:
 	void runTests()
 	{
 		testSetAndGet();
-		testClear();
+		testAddAndClear();
+		testComplexAdd();
 	}
 private:
 	void testSetAndGet()
@@ -37,14 +38,35 @@ private:
 		}
 		std::cout << "testSetAndGet passed" << std::endl;
 	}
-	void testClear()
+	void testAddAndClear()
 	{
 		LayeredAttributes attributes;
 		attributes.SetBaseAttribute(AttributeKey::AttributeKey_Power, 2);
 		attributes.SetBaseAttribute(AttributeKey::AttributeKey_Toughness, 1);
-
-		// TODO: add some layered effects then check the values before clearing
-
+		std::vector<LayeredEffectDefinition> effects;
+		int baseModifier = 0;
+		int baseLayer = 0;
+		effects.push_back({ AttributeKey_Power, EffectOperation_Add, baseModifier + 1, baseLayer + 1 });
+		effects.push_back({ AttributeKey_Toughness, EffectOperation_Add, baseModifier + 1, baseLayer + 1 });
+		for (auto& effect : effects)
+		{
+			attributes.AddLayeredEffect(effect);
+		}
+		for (int i = AttributeKey::AttributeKey_NotAssessed; i <= AttributeKey::AttributeKey_Controller; ++i)
+		{
+			if (i == AttributeKey::AttributeKey_Power)
+			{
+				assert(attributes.GetCurrentAttribute(AttributeKey(i)) == 3);
+			}
+			else if (i == AttributeKey::AttributeKey_Toughness)
+			{
+				assert(attributes.GetCurrentAttribute(AttributeKey(i)) == 2);
+			}
+			else
+			{
+				assert(attributes.GetCurrentAttribute(AttributeKey(i)) == 0);
+			}
+		}
 		attributes.ClearLayeredEffects();
 		for (int i = AttributeKey::AttributeKey_NotAssessed; i <= AttributeKey::AttributeKey_Controller; ++i)
 		{
@@ -61,6 +83,10 @@ private:
 				assert(attributes.GetCurrentAttribute(AttributeKey(i)) == 0);
 			}
 		}
-		std::cout << "testClear passed" << std::endl;
+		std::cout << "testAddAndClear passed" << std::endl;
+	}
+	void testComplexAdd()
+	{
+		// TODO: add several effects with at least one layer vs. timestamp conflict to ensure recalculation works right
 	}
 };
