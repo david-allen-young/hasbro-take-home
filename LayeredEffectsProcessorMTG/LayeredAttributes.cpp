@@ -28,6 +28,7 @@ int LayeredAttributes::GetCurrentAttribute(AttributeKey attribute) const
 //applied in the same order they were added. (see LayeredEffectDefinition.Layer)
 void LayeredAttributes::AddLayeredEffect(LayeredEffectDefinition effect)
 {
+	layeredEffects[effect.Layer].push_back(effect);
 }
 
 //Removes all layered effects from this object. After this call,
