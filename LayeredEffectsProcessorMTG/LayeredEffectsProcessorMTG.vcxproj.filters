@@ -32,7 +32,7 @@
     <ClInclude Include="LayeredAttributes.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LayeredAttributesUnitTests.h">
+    <ClInclude Include="LayeredAttributesUnitTests.hpp">
       <Filter>Unit Tests</Filter>
     </ClInclude>
   </ItemGroup>
