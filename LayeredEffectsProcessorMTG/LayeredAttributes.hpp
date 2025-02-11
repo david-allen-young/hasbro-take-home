@@ -12,6 +12,8 @@ public:
     void AddLayeredEffect(LayeredEffectDefinition effect) override;
     void ClearLayeredEffects() override;
 private:
+	static const int NumAttributes = AttributeKey::AttributeKey_Controller + 1;
+	int baseAttributes[NumAttributes] = {};
 	using Effect = LayeredEffectDefinition;
 	struct EffectCmp
 	{
