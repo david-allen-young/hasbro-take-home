@@ -2,6 +2,8 @@
 
 LayeredAttributes::LayeredAttributes()
 {
+	baseAttributes.fill(0);
+	currentAttributes.fill(0);
 }
 
 //Set the base value for an attribute on this object. All base values
@@ -32,4 +34,7 @@ void LayeredAttributes::AddLayeredEffect(LayeredEffectDefinition effect)
 //all current attributes will be equal to the base attributes.
 void LayeredAttributes::ClearLayeredEffects()
 {
+	std::priority_queue<std::pair<Effect, int>, std::vector<std::pair<Effect, int>>, EffectCmp> emptyHeap;
+	minHeap.swap(emptyHeap);
+	currentAttributes = baseAttributes;
 }
