@@ -14,6 +14,8 @@ LayeredAttributes::LayeredAttributes(bool shouldLogErrors, bool shouldThrowError
 //alter any existing layered effects.
 void LayeredAttributes::SetBaseAttribute(AttributeKey attribute, int value)
 {
+	baseAttributes[attribute] = value;
+	recalculateCurrentAttributes();
 }
 
 //Return the current value for an attribute on this object. Will
@@ -21,7 +23,7 @@ void LayeredAttributes::SetBaseAttribute(AttributeKey attribute, int value)
 //effects.
 int LayeredAttributes::GetCurrentAttribute(AttributeKey attribute) const
 {
-	return 0;
+	return currentAttributes[attribute];
 }
 
 //Applies a new layered effect to this object's attributes. See
