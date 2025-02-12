@@ -21,6 +21,7 @@ private:
 	std::array<int, NumAttributes> currentAttributes;
 	std::map<int, std::vector<LayeredEffectDefinition>> layeredEffects;
 	int lowestLayer = std::numeric_limits<int>::max();
+	int highestLayer = std::numeric_limits<int>::min();
 	void recalculateCurrentAttributes();
 	void updateCurrentAttributes(const LayeredEffectDefinition& effect);
 	void logError(LayeredEffectDefinition effect);
