@@ -7,16 +7,18 @@
 class LayeredAttributes : public ILayeredAttributes
 {
 public:
-	LayeredAttributes(bool shouldLogErrors = false, bool shouldThrowErrors = false);
+	LayeredAttributes(bool errorLoggingEnabled = false, bool errorHandlingEnabled = false, int rereservationSize = 10);
 	virtual ~LayeredAttributes() = default;
 	void SetBaseAttribute(AttributeKey attribute, int value) override;
     int GetCurrentAttribute(AttributeKey attribute) const override;
     void AddLayeredEffect(LayeredEffectDefinition effect) override;
     void ClearLayeredEffects() override;
-	bool errorLoggingEnabled = false;
-	bool errorHandlingEnabled = false;
 
 private:
+	bool errorLoggingEnabled;
+	bool errorHandlingEnabled;
+	int reservationSize;
+
 	static const size_t NumAttributes = AttributeKey::AttributeKey_Controller + 1;
 	std::array<int, NumAttributes> baseAttributes;
 	std::array<int, NumAttributes> currentAttributes;
