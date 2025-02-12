@@ -54,8 +54,31 @@ void LayeredAttributes_v3::AddLayeredEffect(LayeredEffectDefinition effect)
 		vecMods.reserve(attributeModifiers[effect.Attribute][effect.Layer].size() + reservationSize);
 	}
 	Mod mod = { effect.Operation, effect.Modification };
-	consolidateOperands(effect, vecMods, mod);
-	attributeModifiers[effect.Attribute][effect.Layer].push_back(mod);
+
+	//consolidateOperands(effect, vecMods, mod);
+	//attributeModifiers[effect.Attribute][effect.Layer].push_back(mod);
+
+	if (!vecMods.empty() && vecMods.back().operation == effect.Operation)
+	{
+		// consolidate operands where possible
+		if (mod.operation == EffectOperation_Set)
+		{
+			vecMods.back().modifier = mod.modifier;
+		}
+		else if (mod.operation == EffectOperation_Add || mod.operation == EffectOperation_Subtract)
+		{
+			vecMods.back().modifier += mod.modifier;
+		}
+		else if (mod.operation == EffectOperation_Multiply)
+		{
+			vecMods.back().modifier *= mod.modifier;
+		}
+	}
+	else
+	{
+		vecMods.push_back(mod);
+	}
+
 	highestLayers[effect.Attribute] = std::max(highestLayers[effect.Attribute], effect.Layer);
 	if (effect.Layer < highestLayers[effect.Attribute])
 	{
