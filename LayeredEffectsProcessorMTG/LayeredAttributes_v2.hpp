@@ -21,15 +21,27 @@ private:
 
 	static const size_t NumAttributes = AttributeKey::AttributeKey_Controller + 1;
 	std::array<int, NumAttributes> baseAttributes;
-	std::array<int, NumAttributes> currentAttributes;
-	int highestLayer = std::numeric_limits<int>::min();
 
-	// NB: I've chosen a (sorted) map over the (more efficient) unordered_map
-	// because I believe the total number of layeredEffects inserted
-	// will likely be less than 100 and it is easier to keep the
-	// effects sorted by layer during insertion since I am iterating
-	// through the map during recalculateCurrentAttributes()
-	std::map<int, std::vector<LayeredEffectDefinition>> layeredEffects;
+	struct Mod
+	{
+		EffectOperation operation;
+		int modifier;
+	};
+	using LayerModsMap = std::map</*layer*/int, std::vector<Mod>>;
+	std::array<LayerModsMap, NumAttributes> attributeModifiers;
+
+	std::array<int, NumAttributes> highestLayers;
+
+
+	//std::array<int, NumAttributes> currentAttributes;
+	//int highestLayer = std::numeric_limits<int>::min();
+
+	//// NB: I've chosen a (sorted) map over the (more efficient) unordered_map
+	//// because I believe the total number of layeredEffects inserted
+	//// will likely be less than 100 and it is easier to keep the
+	//// effects sorted by layer during insertion since I am iterating
+	//// through the map during recalculateCurrentAttributes()
+	//std::map<int, std::vector<LayeredEffectDefinition>> layeredEffects;
 
 	void recalculateCurrentAttributes();
 	void updateCurrentAttributes(const LayeredEffectDefinition& effect);

@@ -5,7 +5,8 @@ LayeredAttributes_v2::LayeredAttributes_v2(bool errorLoggingEnabled, bool errorH
 	: errorLoggingEnabled(errorLoggingEnabled), errorHandlingEnabled(errorHandlingEnabled), reservationSize(std::max(1ULL, reservationSize))
 {
 	baseAttributes.fill(0);
-	currentAttributes.fill(0);
+	//currentAttributes.fill(0);
+	highestLayers.fill(std::numeric_limits<int>().min());
 }
 
 //Set the base value for an attribute on this object. All base values
@@ -19,16 +20,8 @@ void LayeredAttributes_v2::SetBaseAttribute(AttributeKey attribute, int value)
 	}
 	else
 	{
-		// NB: I suppose this is the nuclear option
-		// but I would prefer an obvious bad outcome
-		// from a bad input during runtime
-		baseAttributes.fill(std::numeric_limits<int>().min());
+		baseAttributes[attribute] = std::numeric_limits<int>().min();
 	}
-	// NB: This has the disadvantage of recalculating
-	// each time SetBaseAttribute is called, however
-	// I see no way to implement a batch set of all attributes
-	// while maintaining the sanctity of the given interface
-	recalculateCurrentAttributes();
 }
 
 //Return the current value for an attribute on this object. Will
@@ -38,7 +31,9 @@ int LayeredAttributes_v2::GetCurrentAttribute(AttributeKey attribute) const
 {
 	if (attributeInBounds(attribute))
 	{
-		return currentAttributes[attribute];
+		// TODO: Replace this code
+		//return currentAttributes[attribute];
+		return 0; // temp
 	}
 	// make it obvious during runtime that we received bad input
 	return std::numeric_limits<int>::min();
@@ -51,106 +46,107 @@ int LayeredAttributes_v2::GetCurrentAttribute(AttributeKey attribute) const
 //applied in the same order they were added. (see LayeredEffectDefinition.Layer)
 void LayeredAttributes_v2::AddLayeredEffect(LayeredEffectDefinition effect)
 {
-	bool shouldRecalculate = effect.Layer < highestLayer;
-	highestLayer = std::max(highestLayer, effect.Layer);
-	if (layeredEffects.count(effect.Layer) == 0)
-	{
-		// NB: Here my intention is to make subsequent pushes more efficient by preallocating memory
-		// The default value (10) seemed like a reasonable number of slots to reserve given the mechanics of the card game
-		// (the interface and instructions are ambiguous as to the likely volume of calls)
-		layeredEffects[effect.Layer] = std::vector<LayeredEffectDefinition>();
-		layeredEffects[effect.Layer].reserve(reservationSize);
-	}
-	else if (layeredEffects[effect.Layer].capacity() < layeredEffects[effect.Layer].size() + 1)
-	{
-		// NB: And here we grow by chunks when the capacity is exceeded
-		layeredEffects[effect.Layer].reserve(layeredEffects[effect.Layer].size() + reservationSize);
-	}
-	layeredEffects[effect.Layer].push_back(effect);
-	if (shouldRecalculate)
-	{
-		recalculateCurrentAttributes();
-	}
-	else
-	{
-		updateCurrentAttributes(effect);
-	}
+	//bool shouldRecalculate = effect.Layer < highestLayer;
+	//highestLayer = std::max(highestLayer, effect.Layer);
+	//if (layeredEffects.count(effect.Layer) == 0)
+	//{
+	//	// NB: Here my intention is to make subsequent pushes more efficient by preallocating memory
+	//	// The default value (10) seemed like a reasonable number of slots to reserve given the mechanics of the card game
+	//	// (the interface and instructions are ambiguous as to the likely volume of calls)
+	//	layeredEffects[effect.Layer] = std::vector<LayeredEffectDefinition>();
+	//	layeredEffects[effect.Layer].reserve(reservationSize);
+	//}
+	//else if (layeredEffects[effect.Layer].capacity() < layeredEffects[effect.Layer].size() + 1)
+	//{
+	//	// NB: And here we grow by chunks when the capacity is exceeded
+	//	layeredEffects[effect.Layer].reserve(layeredEffects[effect.Layer].size() + reservationSize);
+	//}
+	//layeredEffects[effect.Layer].push_back(effect);
+	//if (shouldRecalculate)
+	//{
+	//	recalculateCurrentAttributes();
+	//}
+	//else
+	//{
+	//	updateCurrentAttributes(effect);
+	//}
 }
 
 //Removes all layered effects from this object. After this call,
 //all current attributes will be equal to the base attributes.
 void LayeredAttributes_v2::ClearLayeredEffects()
 {
-	layeredEffects.clear();
-	currentAttributes = baseAttributes;
+	// TODO: Replace this code
+	//layeredEffects.clear();
+	//currentAttributes = baseAttributes;
 }
 
 void LayeredAttributes_v2::recalculateCurrentAttributes()
 {
-	currentAttributes = baseAttributes;
-	for (auto& [layer, effects] : layeredEffects)
-	{
-		for (auto& effect : effects)
-		{
-			updateCurrentAttributes(effect);
-		}
-	}
+	//currentAttributes = baseAttributes;
+	//for (auto& [layer, effects] : layeredEffects)
+	//{
+	//	for (auto& effect : effects)
+	//	{
+	//		updateCurrentAttributes(effect);
+	//	}
+	//}
 }
 
 void LayeredAttributes_v2::updateCurrentAttributes(const LayeredEffectDefinition& effect)
 {
-	if (attributeInBounds(effect.Attribute) == false)
-	{
-		// NB: I suppose this is the nuclear option
-		// but I would prefer an obvious bad outcome
-		// from a bad input during runtime
-		currentAttributes.fill(std::numeric_limits<int>().min());
-		return;
-	}
-	if (effect.Operation == EffectOperation::EffectOperation_Set)
-	{
-		currentAttributes[effect.Attribute] = effect.Modification;
-	}
-	else if (effect.Operation == EffectOperation::EffectOperation_Add)
-	{
-		currentAttributes[effect.Attribute] += effect.Modification;
-	}
-	else if (effect.Operation == EffectOperation::EffectOperation_Subtract)
-	{
-		currentAttributes[effect.Attribute] -= effect.Modification;
-	}
-	else if (effect.Operation == EffectOperation::EffectOperation_Multiply)
-	{
-		currentAttributes[effect.Attribute] *= effect.Modification;
-	}
-	else if (effect.Operation == EffectOperation::EffectOperation_BitwiseOr)
-	{
-		currentAttributes[effect.Attribute] |= effect.Modification;
-	}
-	else if (effect.Operation == EffectOperation::EffectOperation_BitwiseAnd)
-	{
-		currentAttributes[effect.Attribute] &= effect.Modification;
-	}
-	else if (effect.Operation == EffectOperation::EffectOperation_BitwiseXor)
-	{
-		currentAttributes[effect.Attribute] ^= effect.Modification;
-	}
-	else //if (effect.Operation == EffectOperation::EffectOperation_Invalid)
-	{
-		// NB: In this case I am not using the nuclear option
-		// because the index is in range and the consequence
-		// of receiving an Invalid operation is ambiguous
-		// with only the interface and instructions provided
-		// (refer to ILayeredAttributes.hpp)
-		if (errorLoggingEnabled)
-		{
-			logError(effect);
-		}
-		if (errorHandlingEnabled)
-		{
-			throw std::runtime_error("Invalid effect operation");
-		}
-	}
+	//if (attributeInBounds(effect.Attribute) == false)
+	//{
+	//	// NB: I suppose this is the nuclear option
+	//	// but I would prefer an obvious bad outcome
+	//	// from a bad input during runtime
+	//	currentAttributes.fill(std::numeric_limits<int>().min());
+	//	return;
+	//}
+	//if (effect.Operation == EffectOperation::EffectOperation_Set)
+	//{
+	//	currentAttributes[effect.Attribute] = effect.Modification;
+	//}
+	//else if (effect.Operation == EffectOperation::EffectOperation_Add)
+	//{
+	//	currentAttributes[effect.Attribute] += effect.Modification;
+	//}
+	//else if (effect.Operation == EffectOperation::EffectOperation_Subtract)
+	//{
+	//	currentAttributes[effect.Attribute] -= effect.Modification;
+	//}
+	//else if (effect.Operation == EffectOperation::EffectOperation_Multiply)
+	//{
+	//	currentAttributes[effect.Attribute] *= effect.Modification;
+	//}
+	//else if (effect.Operation == EffectOperation::EffectOperation_BitwiseOr)
+	//{
+	//	currentAttributes[effect.Attribute] |= effect.Modification;
+	//}
+	//else if (effect.Operation == EffectOperation::EffectOperation_BitwiseAnd)
+	//{
+	//	currentAttributes[effect.Attribute] &= effect.Modification;
+	//}
+	//else if (effect.Operation == EffectOperation::EffectOperation_BitwiseXor)
+	//{
+	//	currentAttributes[effect.Attribute] ^= effect.Modification;
+	//}
+	//else //if (effect.Operation == EffectOperation::EffectOperation_Invalid)
+	//{
+	//	// NB: In this case I am not using the nuclear option
+	//	// because the index is in range and the consequence
+	//	// of receiving an Invalid operation is ambiguous
+	//	// with only the interface and instructions provided
+	//	// (refer to ILayeredAttributes.hpp)
+	//	if (errorLoggingEnabled)
+	//	{
+	//		logError(effect);
+	//	}
+	//	if (errorHandlingEnabled)
+	//	{
+	//		throw std::runtime_error("Invalid effect operation");
+	//	}
+	//}
 }
 
 void LayeredAttributes_v2::logError([[maybe_unused]] LayeredEffectDefinition effect)
