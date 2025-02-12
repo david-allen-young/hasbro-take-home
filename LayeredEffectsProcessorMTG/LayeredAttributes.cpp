@@ -52,6 +52,14 @@ void LayeredAttributes::AddLayeredEffect(LayeredEffectDefinition effect)
 	//lowestLayer = std::min(lowestLayer, effect.Layer);
 	bool shouldRecalculate = effect.Layer < highestLayer;
 	highestLayer = std::max(highestLayer, effect.Layer);
+	if (layeredEffects.count(effect.Layer) == 0)
+	{
+		// NB: Here my intention is to make subsequent pushes more efficient by preallocating memory
+		// 10 seemed like a reasonable number of slots to reserve given the mechanics of the card game
+		// (the interface and instructions are ambiguous as to volume of calls)
+		layeredEffects[effect.Layer] = std::vector<LayeredEffectDefinition>();
+		layeredEffects[effect.Layer].reserve(10);
+	}
 	layeredEffects[effect.Layer].push_back(effect);
 	if (shouldRecalculate)
 	{
