@@ -1,6 +1,7 @@
 #pragma once
 #include "LayeredAttributes_v1.hpp"
 #include "LayeredAttributes_v2.hpp"
+#include "LayeredAttributes_v3.hpp"
 #include <assert.h>
 #include <iostream>
 
@@ -8,7 +9,8 @@ class LayeredAttributesUnitTests
 {
 public:
 	//using Implementation = LayeredAttributes_v1;
-	using Implementation = LayeredAttributes_v2;
+	//using Implementation = LayeredAttributes_v2;
+	using Implementation = LayeredAttributes_v3;
 
 	LayeredAttributesUnitTests() = default;
 	// Obviously, these tests are not comprehensive...
