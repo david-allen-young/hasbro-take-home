@@ -13,8 +13,9 @@ public:
 	using Implementation = LayeredAttributes_v3;
 
 	LayeredAttributesUnitTests() = default;
-	// Obviously, these tests are not comprehensive...
-	// They're short and simple for now to ensure the deadline is met
+
+	// These tests should not throw an error
+	// (assertions are expected to return true)
 	void runOperationalTests()
 	{
 		testZeroReservation();
@@ -24,6 +25,7 @@ public:
 		testComplexAdd1();
 		testComplexAdd2();
 	}
+
 	// Warning: These tests are expected to throw an error
 	void runCrashTests()
 	{
@@ -32,23 +34,7 @@ public:
 
 private:
 	std::unique_ptr<ILayeredAttributes> attributes;
-	void testZeroReservation()
-	{
-		attributes = std::make_unique<Implementation>(false, false, 0);
-		attributes->SetBaseAttribute(AttributeKey::AttributeKey_Power, 2);
-		attributes->SetBaseAttribute(AttributeKey::AttributeKey_Toughness, 1);
-		std::vector<LayeredEffectDefinition> effects;
-		effects.push_back({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
-		effects.push_back({ AttributeKey_Toughness, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
-		effects.push_back({ AttributeKey_Power, EffectOperation_Set, /*modifier*/4, /*layer*/0 });
-		effects.push_back({ AttributeKey_Power, EffectOperation_Multiply, /*modifier*/2, /*layer*/1 });
-		effects.push_back({ AttributeKey_Power, EffectOperation_Subtract, /*modifier*/1, /*layer*/2 });
-		for (auto& effect : effects)
-		{
-			attributes->AddLayeredEffect(effect);
-		}
-		std::cout << "testZeroReservation passed" << std::endl;
-	}
+	void testZeroReservation();
 	void testSetAndGet()
 	{
 		attributes = std::make_unique<Implementation>();
