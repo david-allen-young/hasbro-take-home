@@ -47,8 +47,6 @@ int LayeredAttributes::GetCurrentAttribute(AttributeKey attribute) const
 //applied in the same order they were added. (see LayeredEffectDefinition.Layer)
 void LayeredAttributes::AddLayeredEffect(LayeredEffectDefinition effect)
 {
-	//bool shouldRecalculate = effect.Layer < lowestLayer;
-	//lowestLayer = std::min(lowestLayer, effect.Layer);
 	bool shouldRecalculate = effect.Layer < highestLayer;
 	highestLayer = std::max(highestLayer, effect.Layer);
 	if (layeredEffects.count(effect.Layer) == 0)

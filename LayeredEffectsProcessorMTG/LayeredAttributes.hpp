@@ -22,7 +22,6 @@ private:
 	static const size_t NumAttributes = AttributeKey::AttributeKey_Controller + 1;
 	std::array<int, NumAttributes> baseAttributes;
 	std::array<int, NumAttributes> currentAttributes;
-	//int lowestLayer = std::numeric_limits<int>::max();
 	int highestLayer = std::numeric_limits<int>::min();
 
 	// NB: I've chosen a (sorted) map over the (more efficient) unordered_map
