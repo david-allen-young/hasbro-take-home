@@ -1,7 +1,7 @@
-#include "LayeredAttributes.hpp"
+#include "LayeredAttributes_v1.hpp"
 #include <stdexcept>
 
-LayeredAttributes::LayeredAttributes(bool errorLoggingEnabled, bool errorHandlingEnabled, size_t reservationSize)
+LayeredAttributes_v1::LayeredAttributes_v1(bool errorLoggingEnabled, bool errorHandlingEnabled, size_t reservationSize)
 	: errorLoggingEnabled(errorLoggingEnabled), errorHandlingEnabled(errorHandlingEnabled), reservationSize(std::max(1ULL, reservationSize))
 {
 	baseAttributes.fill(0);
@@ -11,7 +11,7 @@ LayeredAttributes::LayeredAttributes(bool errorLoggingEnabled, bool errorHandlin
 //Set the base value for an attribute on this object. All base values
 //default to 0 until set. Note that resetting a base attribute does not
 //alter any existing layered effects.
-void LayeredAttributes::SetBaseAttribute(AttributeKey attribute, int value)
+void LayeredAttributes_v1::SetBaseAttribute(AttributeKey attribute, int value)
 {
 	if (attributeInBounds(attribute))
 	{
@@ -34,7 +34,7 @@ void LayeredAttributes::SetBaseAttribute(AttributeKey attribute, int value)
 //Return the current value for an attribute on this object. Will
 //be equal to the base value, modified by any applicable layered
 //effects.
-int LayeredAttributes::GetCurrentAttribute(AttributeKey attribute) const
+int LayeredAttributes_v1::GetCurrentAttribute(AttributeKey attribute) const
 {
 	if (attributeInBounds(attribute))
 	{
@@ -49,7 +49,7 @@ int LayeredAttributes::GetCurrentAttribute(AttributeKey attribute) const
 //applied. Note that any number of layered effects may be applied
 //at any given time. Also note that layered effects are not necessarily
 //applied in the same order they were added. (see LayeredEffectDefinition.Layer)
-void LayeredAttributes::AddLayeredEffect(LayeredEffectDefinition effect)
+void LayeredAttributes_v1::AddLayeredEffect(LayeredEffectDefinition effect)
 {
 	bool shouldRecalculate = effect.Layer < highestLayer;
 	highestLayer = std::max(highestLayer, effect.Layer);
@@ -79,13 +79,13 @@ void LayeredAttributes::AddLayeredEffect(LayeredEffectDefinition effect)
 
 //Removes all layered effects from this object. After this call,
 //all current attributes will be equal to the base attributes.
-void LayeredAttributes::ClearLayeredEffects()
+void LayeredAttributes_v1::ClearLayeredEffects()
 {
 	layeredEffects.clear();
 	currentAttributes = baseAttributes;
 }
 
-void LayeredAttributes::recalculateCurrentAttributes()
+void LayeredAttributes_v1::recalculateCurrentAttributes()
 {
 	currentAttributes = baseAttributes;
 	for (auto& [layer, effects] : layeredEffects)
@@ -97,7 +97,7 @@ void LayeredAttributes::recalculateCurrentAttributes()
 	}
 }
 
-void LayeredAttributes::updateCurrentAttributes(const LayeredEffectDefinition& effect)
+void LayeredAttributes_v1::updateCurrentAttributes(const LayeredEffectDefinition& effect)
 {
 	if (attributeInBounds(effect.Attribute) == false)
 	{
@@ -141,7 +141,7 @@ void LayeredAttributes::updateCurrentAttributes(const LayeredEffectDefinition& e
 		// because the index is in range and the consequence
 		// of receiving an Invalid operation is ambiguous
 		// with only the interface and instructions provided
-		// (refer to ILayeredAttributes.hpp)
+		// (refer to ILayeredAttributes_v1.hpp)
 		if (errorLoggingEnabled)
 		{
 			logError(effect);
@@ -153,17 +153,17 @@ void LayeredAttributes::updateCurrentAttributes(const LayeredEffectDefinition& e
 	}
 }
 
-void LayeredAttributes::logError([[maybe_unused]] LayeredEffectDefinition effect)
+void LayeredAttributes_v1::logError([[maybe_unused]] LayeredEffectDefinition effect)
 {
 	// Imagine that this method writes something useful to glog or similar logging service
 }
 
-void LayeredAttributes::logError([[maybe_unused]] AttributeKey attribute) const
+void LayeredAttributes_v1::logError([[maybe_unused]] AttributeKey attribute) const
 {
 	// Imagine that this method writes something useful to glog or similar logging service
 }
 
-bool LayeredAttributes::attributeInBounds(AttributeKey attribute) const
+bool LayeredAttributes_v1::attributeInBounds(AttributeKey attribute) const
 {
 	bool outOfBounds = attribute < 0 || attribute >= NumAttributes;
 	if (outOfBounds && errorLoggingEnabled)
