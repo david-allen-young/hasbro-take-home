@@ -7,7 +7,6 @@ LayeredAttributes_v3::LayeredAttributes_v3(bool errorLoggingEnabled, bool errorH
 	baseAttributes.fill(0);
 	currentAttributes.fill(0);
 	highestLayers.fill(std::numeric_limits<int>::min());
-	hasValidCache.fill(true);
 }
 
 //Set the base value for an attribute on this object. All base values
@@ -18,12 +17,8 @@ void LayeredAttributes_v3::SetBaseAttribute(AttributeKey attribute, int value)
 	if (attributeInBounds(attribute))
 	{
 		baseAttributes[attribute] = value;
+		calculateAndCache(attribute);
 	}
-	else
-	{
-		baseAttributes[attribute] = std::numeric_limits<int>().min();
-	}
-	hasValidCache[attribute] = false;
 }
 
 //Return the current value for an attribute on this object. Will
@@ -35,46 +30,7 @@ int LayeredAttributes_v3::GetCurrentAttribute(AttributeKey attribute) const
 	{
 		return std::numeric_limits<int>::min();
 	}
-	if (hasValidCache[attribute])
-	{
-		return currentAttributes[attribute];
-	}
-	int result = baseAttributes[attribute];
-	for (const auto& [layer, mods] : attributeModifiers[attribute])
-	{
-		for (const auto& mod : mods)
-		{
-			if (mod.operation == EffectOperation::EffectOperation_Set)
-			{
-				result = mod.modifier;
-			}
-			else if (mod.operation == EffectOperation::EffectOperation_Add)
-			{
-				result += mod.modifier;
-			}
-			else if (mod.operation == EffectOperation::EffectOperation_Subtract)
-			{
-				result -= mod.modifier;
-			}
-			else if (mod.operation == EffectOperation::EffectOperation_Multiply)
-			{
-				result *= mod.modifier;
-			}
-			else if (mod.operation == EffectOperation::EffectOperation_BitwiseOr)
-			{
-				result |= mod.modifier;
-			}
-			else if (mod.operation == EffectOperation::EffectOperation_BitwiseAnd)
-			{
-				result &= mod.modifier;
-			}
-			else if (mod.operation == EffectOperation::EffectOperation_BitwiseXor)
-			{
-				result ^= mod.modifier;
-			}
-		}
-	}
-	return result;
+	return currentAttributes[attribute];
 }
 
 //Applies a new layered effect to this object's attributes. See
@@ -84,6 +40,10 @@ int LayeredAttributes_v3::GetCurrentAttribute(AttributeKey attribute) const
 //applied in the same order they were added. (see LayeredEffectDefinition.Layer)
 void LayeredAttributes_v3::AddLayeredEffect(LayeredEffectDefinition effect)
 {
+	if (attributeInBounds(effect.Attribute) == false)
+	{
+		return;
+	}
 	if (attributeModifiers[effect.Attribute].count(effect.Layer) == 0)
 	{
 		attributeModifiers[effect.Attribute].insert({ effect.Layer, std::vector<Mod>() });
@@ -93,47 +53,17 @@ void LayeredAttributes_v3::AddLayeredEffect(LayeredEffectDefinition effect)
 	{
 		vecMods.reserve(attributeModifiers[effect.Attribute][effect.Layer].size() + reservationSize);
 	}
-
 	Mod mod = { effect.Operation, effect.Modification };
 	consolidateOperands(effect, vecMods, mod);
 	attributeModifiers[effect.Attribute][effect.Layer].push_back(mod);
-
-	int& current = currentAttributes[effect.Attribute];
-	if (effect.Layer > highestLayers[effect.Attribute])
+	highestLayers[effect.Attribute] = std::max(highestLayers[effect.Attribute], effect.Layer);
+	if (effect.Layer < highestLayers[effect.Attribute])
 	{
-		highestLayers[effect.Attribute] = effect.Layer;
-		current = baseAttributes[effect.Attribute];
+		calculateAndCache(effect.Attribute);
 	}
 	else
 	{
-		if (mod.operation == EffectOperation::EffectOperation_Set)
-		{
-			current = mod.modifier;
-		}
-		else if (mod.operation == EffectOperation::EffectOperation_Add)
-		{
-			current += mod.modifier;
-		}
-		else if (mod.operation == EffectOperation::EffectOperation_Subtract)
-		{
-			current -= mod.modifier;
-		}
-		else if (mod.operation == EffectOperation::EffectOperation_Multiply)
-		{
-			current *= mod.modifier;
-		}
-		else if (mod.operation == EffectOperation::EffectOperation_BitwiseOr)
-		{
-			current |= mod.modifier;
-		}
-		else if (mod.operation == EffectOperation::EffectOperation_BitwiseAnd)
-		{
-			current &= mod.modifier;
-		}
-		else if (mod.operation == EffectOperation::EffectOperation_BitwiseXor)
-		{
-			current ^= mod.modifier;
-		}
+		updateCache(effect.Attribute, mod);
 	}
 }
 
@@ -142,6 +72,8 @@ void LayeredAttributes_v3::AddLayeredEffect(LayeredEffectDefinition effect)
 void LayeredAttributes_v3::ClearLayeredEffects()
 {
 	attributeModifiers = {};
+	currentAttributes = baseAttributes;
+	highestLayers.fill(std::numeric_limits<int>::min());
 }
 
 void LayeredAttributes_v3::logError([[maybe_unused]] LayeredEffectDefinition effect)
@@ -186,5 +118,78 @@ void LayeredAttributes_v3::consolidateOperands(const LayeredEffectDefinition& ef
 			mod.modifier *= vecMods.back().modifier;
 			vecMods.pop_back();
 		}
+	}
+}
+
+void LayeredAttributes_v3::calculateAndCache(AttributeKey attribute)
+{
+	int current = baseAttributes[attribute];
+	for (const auto& [layer, mods] : attributeModifiers[attribute])
+	{
+		for (const auto& mod : mods)
+		{
+			if (mod.operation == EffectOperation::EffectOperation_Set)
+			{
+				current = mod.modifier;
+			}
+			else if (mod.operation == EffectOperation::EffectOperation_Add)
+			{
+				current += mod.modifier;
+			}
+			else if (mod.operation == EffectOperation::EffectOperation_Subtract)
+			{
+				current -= mod.modifier;
+			}
+			else if (mod.operation == EffectOperation::EffectOperation_Multiply)
+			{
+				current *= mod.modifier;
+			}
+			else if (mod.operation == EffectOperation::EffectOperation_BitwiseOr)
+			{
+				current |= mod.modifier;
+			}
+			else if (mod.operation == EffectOperation::EffectOperation_BitwiseAnd)
+			{
+				current &= mod.modifier;
+			}
+			else if (mod.operation == EffectOperation::EffectOperation_BitwiseXor)
+			{
+				current ^= mod.modifier;
+			}
+		}
+	}
+	currentAttributes[attribute] = current;
+}
+
+void LayeredAttributes_v3::updateCache(AttributeKey attribute, const Mod& mod)
+{
+	int& current = currentAttributes[attribute];
+	if (mod.operation == EffectOperation::EffectOperation_Set)
+	{
+		current = mod.modifier;
+	}
+	else if (mod.operation == EffectOperation::EffectOperation_Add)
+	{
+		current += mod.modifier;
+	}
+	else if (mod.operation == EffectOperation::EffectOperation_Subtract)
+	{
+		current -= mod.modifier;
+	}
+	else if (mod.operation == EffectOperation::EffectOperation_Multiply)
+	{
+		current *= mod.modifier;
+	}
+	else if (mod.operation == EffectOperation::EffectOperation_BitwiseOr)
+	{
+		current |= mod.modifier;
+	}
+	else if (mod.operation == EffectOperation::EffectOperation_BitwiseAnd)
+	{
+		current &= mod.modifier;
+	}
+	else if (mod.operation == EffectOperation::EffectOperation_BitwiseXor)
+	{
+		current ^= mod.modifier;
 	}
 }

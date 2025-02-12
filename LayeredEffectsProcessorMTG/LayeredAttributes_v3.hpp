@@ -21,7 +21,6 @@ private:
 
 	static const size_t NumAttributes = AttributeKey::AttributeKey_Controller + 1;
 	std::array<int, NumAttributes> baseAttributes, currentAttributes, highestLayers;
-	std::array<bool, NumAttributes> hasValidCache;
 
 	struct Mod
 	{
@@ -35,4 +34,6 @@ private:
 	void logError(AttributeKey attribute) const;
 	bool attributeInBounds(AttributeKey attribute) const;
 	void consolidateOperands(const LayeredEffectDefinition& effect, std::vector<Mod>& vecMods, Mod& mod);
+	void calculateAndCache(AttributeKey attribute);
+	void updateCache(AttributeKey attribute, const Mod& mod);
 };
