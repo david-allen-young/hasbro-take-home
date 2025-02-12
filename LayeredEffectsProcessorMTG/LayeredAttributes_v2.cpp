@@ -29,14 +29,46 @@ void LayeredAttributes_v2::SetBaseAttribute(AttributeKey attribute, int value)
 //effects.
 int LayeredAttributes_v2::GetCurrentAttribute(AttributeKey attribute) const
 {
-	if (attributeInBounds(attribute))
+	if (attributeInBounds(attribute) == false)
 	{
-		// TODO: Replace this code
-		//return currentAttributes[attribute];
-		return 0; // temp
+		return std::numeric_limits<int>::min();
 	}
-	// make it obvious during runtime that we received bad input
-	return std::numeric_limits<int>::min();
+	int result = baseAttributes[attribute];
+	for (const auto& [layer, mods] : attributeModifiers[attribute])
+	{
+		for (const auto& mod : mods)
+		{
+			if (mod.operation == EffectOperation::EffectOperation_Set)
+			{
+				result = mod.modifier;
+			}
+			else if (mod.operation == EffectOperation::EffectOperation_Add)
+			{
+				result += mod.modifier;
+			}
+			else if (mod.operation == EffectOperation::EffectOperation_Subtract)
+			{
+				result -= mod.modifier;
+			}
+			else if (mod.operation == EffectOperation::EffectOperation_Multiply)
+			{
+				result *= mod.modifier;
+			}
+			else if (mod.operation == EffectOperation::EffectOperation_BitwiseOr)
+			{
+				result |= mod.modifier;
+			}
+			else if (mod.operation == EffectOperation::EffectOperation_BitwiseAnd)
+			{
+				result &= mod.modifier;
+			}
+			else if (mod.operation == EffectOperation::EffectOperation_BitwiseXor)
+			{
+				result ^= mod.modifier;
+			}
+		}
+	}
+	return result;
 }
 
 //Applies a new layered effect to this object's attributes. See
