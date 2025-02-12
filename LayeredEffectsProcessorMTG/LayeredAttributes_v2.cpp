@@ -82,32 +82,17 @@ void LayeredAttributes_v2::AddLayeredEffect(LayeredEffectDefinition effect)
 
 	if (attributeModifiers[effect.Attribute].count(effect.Layer) == 0)
 	{
-		attributeModifiers[effect.Attribute][effect.Layer] = std::vector<Mod>();
+		std::vector<Mod> vecMods;
+		vecMods.reserve(reservationSize);
+		attributeModifiers[effect.Attribute][effect.Layer].swap(vecMods);
 	}
 	else if(attributeModifiers[effect.Attribute][effect.Layer].capacity() < attributeModifiers[effect.Attribute][effect.Layer].size() + 1)
 	{
-		// NB: And here we grow by chunks when the capacity is exceeded
 		attributeModifiers[effect.Attribute][effect.Layer].reserve(attributeModifiers[effect.Attribute][effect.Layer].size() + reservationSize);
 	}
 	Mod mod = { effect.Operation, effect.Modification };
 	attributeModifiers[effect.Attribute][effect.Layer].push_back(mod);
 
-
-
-	//if (layeredEffects.count(effect.Layer) == 0)
-	//{
-	//	// NB: Here my intention is to make subsequent pushes more efficient by preallocating memory
-	//	// The default value (10) seemed like a reasonable number of slots to reserve given the mechanics of the card game
-	//	// (the interface and instructions are ambiguous as to the likely volume of calls)
-	//	layeredEffects[effect.Layer] = std::vector<LayeredEffectDefinition>();
-	//	layeredEffects[effect.Layer].reserve(reservationSize);
-	//}
-	//else if (layeredEffects[effect.Layer].capacity() < layeredEffects[effect.Layer].size() + 1)
-	//{
-	//	// NB: And here we grow by chunks when the capacity is exceeded
-	//	layeredEffects[effect.Layer].reserve(layeredEffects[effect.Layer].size() + reservationSize);
-	//}
-	//layeredEffects[effect.Layer].push_back(effect);
 	//if (shouldRecalculate)
 	//{
 	//	recalculateCurrentAttributes();
