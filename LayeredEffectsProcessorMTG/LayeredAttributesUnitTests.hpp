@@ -7,14 +7,15 @@ class LayeredAttributesUnitTests
 {
 public:
 	LayeredAttributesUnitTests() = default;
-	// obviously, these tests are not comprehensive...
-	// they're short and simple for now to ensure the deadline is met
-	void runTests()
+	// Obviously, these tests are not comprehensive...
+	// They're short and simple for now to ensure the deadline is met
+	void runSafeTests()
 	{
 		testSetAndGet();
 		testAddAndClear();
 		testComplexAdd();
 	}
+	// Warning: These tests are expected to throw an error
 	void runCrashTests()
 	{
 		testOutOfBounds();
