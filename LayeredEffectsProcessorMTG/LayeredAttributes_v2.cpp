@@ -85,9 +85,9 @@ void LayeredAttributes_v2::AddLayeredEffect(LayeredEffectDefinition effect)
 		attributeModifiers[effect.Attribute].insert({ effect.Layer, std::vector<Mod>() });
 	}
 	auto& vecMods = attributeModifiers[effect.Attribute][effect.Layer];
-	if(attributeModifiers[effect.Attribute][effect.Layer].capacity() < attributeModifiers[effect.Attribute][effect.Layer].size() + 1)
+	if(vecMods.capacity() < vecMods.size() + 1)
 	{
-		attributeModifiers[effect.Attribute][effect.Layer].reserve(attributeModifiers[effect.Attribute][effect.Layer].size() + reservationSize);
+		vecMods.reserve(attributeModifiers[effect.Attribute][effect.Layer].size() + reservationSize);
 	}
 	Mod mod = { effect.Operation, effect.Modification };
 	attributeModifiers[effect.Attribute][effect.Layer].push_back(mod);
