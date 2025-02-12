@@ -3,10 +3,9 @@
 int main()
 {
 	LayeredAttributesUnitTests tests;
-	tests.runSafeTests();
-	// Warning: These tests are expected to throw an error
-	//tests.runCrashTests();
-    return 0;
+	tests.runOperationalTests();
+	tests.runCrashTests(); 
+	return 0;
 }
 
 

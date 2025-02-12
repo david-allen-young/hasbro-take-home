@@ -9,7 +9,7 @@ public:
 	LayeredAttributesUnitTests() = default;
 	// Obviously, these tests are not comprehensive...
 	// They're short and simple for now to ensure the deadline is met
-	void runSafeTests()
+	void runOperationalTests()
 	{
 		testSetAndGet();
 		testAddAndClear();
@@ -18,8 +18,16 @@ public:
 	// Warning: These tests are expected to throw an error
 	void runCrashTests()
 	{
-		testOutOfBounds();
+		try
+		{
+			testOutOfBounds();
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << "Expected exception caught: " << e.what() << '\n';
+		}
 	}
+
 private:
 	void testSetAndGet()
 	{
