@@ -5,7 +5,6 @@ LayeredAttributes_v2::LayeredAttributes_v2(bool errorLoggingEnabled, bool errorH
 	: errorLoggingEnabled(errorLoggingEnabled), errorHandlingEnabled(errorHandlingEnabled), reservationSize(std::max(1ULL, reservationSize))
 {
 	baseAttributes.fill(0);
-	highestLayers.fill(std::numeric_limits<int>().min());
 }
 
 //Set the base value for an attribute on this object. All base values

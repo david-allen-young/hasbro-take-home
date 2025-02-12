@@ -29,7 +29,6 @@ private:
 	};
 	using LayerModsMap = std::map</*layer*/int, std::vector<Mod>>;
 	std::array<LayerModsMap, NumAttributes> attributeModifiers;
-	std::array<int, NumAttributes> highestLayers;
 
 	void logError(LayeredEffectDefinition effect);
 	void logError(AttributeKey attribute) const;
