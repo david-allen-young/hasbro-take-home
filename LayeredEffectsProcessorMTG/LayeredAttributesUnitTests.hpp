@@ -11,24 +11,36 @@ public:
 	// They're short and simple for now to ensure the deadline is met
 	void runOperationalTests()
 	{
+		testZeroReservation();
 		testSetAndGet();
 		testAddAndClear();
-		testComplexAdd();
+		testComplexAdd1();
+		testComplexAdd2();
 	}
 	// Warning: These tests are expected to throw an error
 	void runCrashTests()
 	{
-		try
-		{
-			testOutOfBounds();
-		}
-		catch (const std::exception& e)
-		{
-			std::cerr << "Expected exception caught: " << e.what() << '\n';
-		}
+		testOutOfBounds();
 	}
 
 private:
+	void testZeroReservation()
+	{
+		LayeredAttributes attributes(false,false,0);
+		attributes.SetBaseAttribute(AttributeKey::AttributeKey_Power, 2);
+		attributes.SetBaseAttribute(AttributeKey::AttributeKey_Toughness, 1);
+		std::vector<LayeredEffectDefinition> effects;
+		effects.push_back({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
+		effects.push_back({ AttributeKey_Toughness, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
+		effects.push_back({ AttributeKey_Power, EffectOperation_Set, /*modifier*/4, /*layer*/0 });
+		effects.push_back({ AttributeKey_Power, EffectOperation_Multiply, /*modifier*/2, /*layer*/1 });
+		effects.push_back({ AttributeKey_Power, EffectOperation_Subtract, /*modifier*/1, /*layer*/2 });
+		for (auto& effect : effects)
+		{
+			attributes.AddLayeredEffect(effect);
+		}
+		std::cout << "testZeroReservation passed" << std::endl;
+	}
 	void testSetAndGet()
 	{
 		LayeredAttributes attributes;
@@ -98,7 +110,7 @@ private:
 		}
 		std::cout << "testAddAndClear passed" << std::endl;
 	}
-	void testComplexAdd()
+	void testComplexAdd1()
 	{
 		LayeredAttributes attributes;
 		int basePower = 2;
@@ -134,12 +146,63 @@ private:
 		}
 		assert(attributes.GetCurrentAttribute(AttributeKey::AttributeKey_Power) == 8);
 		assert(attributes.GetCurrentAttribute(AttributeKey::AttributeKey_Toughness) == 2);
-		std::cout << "testComplexAdd passed" << std::endl;
+		std::cout << "testComplexAdd1 passed" << std::endl;
+	}
+	void testComplexAdd2()
+	{
+		LayeredAttributes attributes;
+		int basePower = 2;
+		int baseToughness = 1;
+		attributes.SetBaseAttribute(AttributeKey::AttributeKey_Power, basePower);
+		attributes.SetBaseAttribute(AttributeKey::AttributeKey_Toughness, baseToughness);
+		assert(attributes.GetCurrentAttribute(AttributeKey::AttributeKey_Power) == basePower);
+		assert(attributes.GetCurrentAttribute(AttributeKey::AttributeKey_Toughness) == baseToughness);
+		attributes.AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
+		assert(attributes.GetCurrentAttribute(AttributeKey::AttributeKey_Power) == 3);
+		attributes.AddLayeredEffect({ AttributeKey_Toughness, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
+		assert(attributes.GetCurrentAttribute(AttributeKey::AttributeKey_Toughness) == 2);
+		attributes.AddLayeredEffect({ AttributeKey_Power, EffectOperation_Set, /*modifier*/basePower + 2, /*layer*/0 });
+		assert(attributes.GetCurrentAttribute(AttributeKey::AttributeKey_Power) == 5);
+		attributes.AddLayeredEffect({ AttributeKey_Power, EffectOperation_Multiply, /*modifier*/2, /*layer*/1 });
+		assert(attributes.GetCurrentAttribute(AttributeKey::AttributeKey_Power) == 9);
+		attributes.AddLayeredEffect({ AttributeKey_Power, EffectOperation_Subtract, /*modifier*/1, /*layer*/2 });
+		assert(attributes.GetCurrentAttribute(AttributeKey::AttributeKey_Power) == 8);
+		for (int i = AttributeKey::AttributeKey_NotAssessed; i <= AttributeKey::AttributeKey_Controller; ++i)
+		{
+			if (i == AttributeKey::AttributeKey_Power)
+			{
+				assert(attributes.GetCurrentAttribute(AttributeKey(i)) == 8);
+			}
+			else if (i == AttributeKey::AttributeKey_Toughness)
+			{
+				assert(attributes.GetCurrentAttribute(AttributeKey(i)) == 2);
+			}
+			else
+			{
+				assert(attributes.GetCurrentAttribute(AttributeKey(i)) == 0);
+			}
+		}
+		std::cout << "testComplexAdd2 passed" << std::endl;
 	}
 	void testOutOfBounds()
 	{
 		LayeredAttributes attributes(true,true);
-		attributes.SetBaseAttribute(AttributeKey(-1), 2);
-		attributes.SetBaseAttribute(AttributeKey(100), 1);
+		try
+		{
+			attributes.SetBaseAttribute(AttributeKey(-1), 2);
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << "Expected exception caught: " << e.what() << '\n';
+		}
+		try
+		{
+			attributes.SetBaseAttribute(AttributeKey(100), 1);
+		}
+		catch (const std::exception& e)
+		{
+			std::cerr << "Expected exception caught: " << e.what() << '\n';
+		}
+		std::cout << "testOutOfBounds passed" << std::endl;
 	}
 };
