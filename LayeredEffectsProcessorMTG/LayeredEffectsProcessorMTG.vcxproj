@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="LayeredAttributesUnitTests.cpp" />
     <ClCompile Include="LayeredAttributes_v1.cpp" />
     <ClCompile Include="LayeredAttributes_v2.cpp" />
     <ClCompile Include="LayeredAttributes_v3.cpp" />
