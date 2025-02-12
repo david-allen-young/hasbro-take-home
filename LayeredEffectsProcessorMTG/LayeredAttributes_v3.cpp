@@ -123,73 +123,72 @@ void LayeredAttributes_v3::consolidateOperands(const LayeredEffectDefinition& ef
 
 void LayeredAttributes_v3::calculateAndCache(AttributeKey attribute)
 {
-	int current = baseAttributes[attribute];
+	int result = baseAttributes[attribute];
 	for (const auto& [layer, mods] : attributeModifiers[attribute])
 	{
 		for (const auto& mod : mods)
 		{
 			if (mod.operation == EffectOperation::EffectOperation_Set)
 			{
-				current = mod.modifier;
+				result = mod.modifier;
 			}
 			else if (mod.operation == EffectOperation::EffectOperation_Add)
 			{
-				current += mod.modifier;
+				result += mod.modifier;
 			}
 			else if (mod.operation == EffectOperation::EffectOperation_Subtract)
 			{
-				current -= mod.modifier;
+				result -= mod.modifier;
 			}
 			else if (mod.operation == EffectOperation::EffectOperation_Multiply)
 			{
-				current *= mod.modifier;
+				result *= mod.modifier;
 			}
 			else if (mod.operation == EffectOperation::EffectOperation_BitwiseOr)
 			{
-				current |= mod.modifier;
+				result |= mod.modifier;
 			}
 			else if (mod.operation == EffectOperation::EffectOperation_BitwiseAnd)
 			{
-				current &= mod.modifier;
+				result &= mod.modifier;
 			}
 			else if (mod.operation == EffectOperation::EffectOperation_BitwiseXor)
 			{
-				current ^= mod.modifier;
+				result ^= mod.modifier;
 			}
 		}
 	}
-	currentAttributes[attribute] = current;
+	currentAttributes[attribute] = result;
 }
 
 void LayeredAttributes_v3::updateCache(AttributeKey attribute, const Mod& mod)
 {
-	int& current = currentAttributes[attribute];
 	if (mod.operation == EffectOperation::EffectOperation_Set)
 	{
-		current = mod.modifier;
+		currentAttributes[attribute] = mod.modifier;
 	}
 	else if (mod.operation == EffectOperation::EffectOperation_Add)
 	{
-		current += mod.modifier;
+		currentAttributes[attribute] += mod.modifier;
 	}
 	else if (mod.operation == EffectOperation::EffectOperation_Subtract)
 	{
-		current -= mod.modifier;
+		currentAttributes[attribute] -= mod.modifier;
 	}
 	else if (mod.operation == EffectOperation::EffectOperation_Multiply)
 	{
-		current *= mod.modifier;
+		currentAttributes[attribute] *= mod.modifier;
 	}
 	else if (mod.operation == EffectOperation::EffectOperation_BitwiseOr)
 	{
-		current |= mod.modifier;
+		currentAttributes[attribute] |= mod.modifier;
 	}
 	else if (mod.operation == EffectOperation::EffectOperation_BitwiseAnd)
 	{
-		current &= mod.modifier;
+		currentAttributes[attribute] &= mod.modifier;
 	}
 	else if (mod.operation == EffectOperation::EffectOperation_BitwiseXor)
 	{
-		current ^= mod.modifier;
+		currentAttributes[attribute] ^= mod.modifier;
 	}
 }
