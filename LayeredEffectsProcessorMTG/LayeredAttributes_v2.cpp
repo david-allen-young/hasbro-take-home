@@ -79,6 +79,21 @@ void LayeredAttributes_v2::AddLayeredEffect(LayeredEffectDefinition effect)
 {
 	//bool shouldRecalculate = effect.Layer < highestLayer;
 	//highestLayer = std::max(highestLayer, effect.Layer);
+
+	if (attributeModifiers[effect.Attribute].count(effect.Layer) == 0)
+	{
+		attributeModifiers[effect.Attribute][effect.Layer] = std::vector<Mod>();
+	}
+	else if(attributeModifiers[effect.Attribute][effect.Layer].capacity() < attributeModifiers[effect.Attribute][effect.Layer].size() + 1)
+	{
+		// NB: And here we grow by chunks when the capacity is exceeded
+		attributeModifiers[effect.Attribute][effect.Layer].reserve(attributeModifiers[effect.Attribute][effect.Layer].size() + reservationSize);
+	}
+	Mod mod = { effect.Operation, effect.Modification };
+	attributeModifiers[effect.Attribute][effect.Layer].push_back(mod);
+
+
+
 	//if (layeredEffects.count(effect.Layer) == 0)
 	//{
 	//	// NB: Here my intention is to make subsequent pushes more efficient by preallocating memory
