@@ -43,7 +43,7 @@ private:
 	//// through the map during recalculateCurrentAttributes()
 	//std::map<int, std::vector<LayeredEffectDefinition>> layeredEffects;
 
-	void recalculateCurrentAttributes();
+
 	void updateCurrentAttributes(const LayeredEffectDefinition& effect);
 	void logError(LayeredEffectDefinition effect);
 	void logError(AttributeKey attribute) const;

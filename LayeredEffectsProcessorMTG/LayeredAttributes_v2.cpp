@@ -110,17 +110,7 @@ void LayeredAttributes_v2::ClearLayeredEffects()
 	attributeModifiers = {};
 }
 
-void LayeredAttributes_v2::recalculateCurrentAttributes()
-{
-	//currentAttributes = baseAttributes;
-	//for (auto& [layer, effects] : layeredEffects)
-	//{
-	//	for (auto& effect : effects)
-	//	{
-	//		updateCurrentAttributes(effect);
-	//	}
-	//}
-}
+
 
 void LayeredAttributes_v2::updateCurrentAttributes(const LayeredEffectDefinition& effect)
 {
