@@ -123,6 +123,11 @@ void LayeredAttributes::updateCurrentAttributes(const LayeredEffectDefinition& e
 	}
 	else //if (effect.Operation == EffectOperation::EffectOperation_Invalid)
 	{
+		// NB: In this case I am not using the nuclear option
+		// because the index is in range and the consequence
+		// of receiving an Invalid operation is ambiguous
+		// with only the interface and instructions provided
+		// (refer to ILayeredAttributes.hpp)
 		if (errorLoggingEnabled)
 		{
 			logError(effect);
