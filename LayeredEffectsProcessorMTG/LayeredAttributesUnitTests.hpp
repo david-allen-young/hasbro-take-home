@@ -20,6 +20,7 @@ public:
 		testZeroReservation();
 		testSetAndGet();
 		testAddAndClear();
+		testOperandConsolidation();
 		testComplexAdd1();
 		testComplexAdd2();
 	}
@@ -116,6 +117,25 @@ private:
 			}
 		}
 		std::cout << "testAddAndClear passed" << std::endl;
+	}
+	void testOperandConsolidation()
+	{
+		attributes = std::make_unique<Implementation>();
+		int basePower = 2;
+		attributes->SetBaseAttribute(AttributeKey::AttributeKey_Power, basePower);
+		assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) == basePower);
+		attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
+		attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
+		attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
+		assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) == basePower + 3);
+		attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Multiply, /*modifier*/2, /*layer*/1 });
+		attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Multiply, /*modifier*/2, /*layer*/1 });
+		assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) == basePower * 4 + 3);
+		basePower = 5;
+		attributes->SetBaseAttribute(AttributeKey::AttributeKey_Power, basePower);
+		assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) != basePower);
+		assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) == basePower * 4 + 3);
+		std::cout << "testOperandConsolidation passed" << std::endl;
 	}
 	void testComplexAdd1()
 	{
