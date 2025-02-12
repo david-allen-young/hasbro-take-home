@@ -25,4 +25,6 @@ private:
 	void recalculateCurrentAttributes();
 	void updateCurrentAttributes(const LayeredEffectDefinition& effect);
 	void logError(LayeredEffectDefinition effect);
+	void logError(AttributeKey attribute) const;
+	bool attributeInBounds(AttributeKey attribute) const;
 };

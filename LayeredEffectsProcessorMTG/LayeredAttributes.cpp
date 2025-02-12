@@ -14,7 +14,17 @@ LayeredAttributes::LayeredAttributes(bool shouldLogErrors, bool shouldThrowError
 //alter any existing layered effects.
 void LayeredAttributes::SetBaseAttribute(AttributeKey attribute, int value)
 {
-	baseAttributes[attribute] = value;
+	if (attributeInBounds(attribute))
+	{
+		baseAttributes[attribute] = value;
+	}
+	else
+	{
+		// NB: I suppose this is the nuclear option
+		// but I would prefer an obvious bad outcome
+		// from a bad input during runtime
+		baseAttributes.fill(std::numeric_limits<int>().min());
+	}
 	recalculateCurrentAttributes();
 }
 
@@ -23,7 +33,12 @@ void LayeredAttributes::SetBaseAttribute(AttributeKey attribute, int value)
 //effects.
 int LayeredAttributes::GetCurrentAttribute(AttributeKey attribute) const
 {
-	return currentAttributes[attribute];
+	if (attributeInBounds(attribute))
+	{
+		return currentAttributes[attribute];
+	}
+	// make it obvious during runtime that we received bad input
+	return std::numeric_limits<int>::min();
 }
 
 //Applies a new layered effect to this object's attributes. See
@@ -70,6 +85,14 @@ void LayeredAttributes::recalculateCurrentAttributes()
 
 void LayeredAttributes::updateCurrentAttributes(const LayeredEffectDefinition& effect)
 {
+	if (attributeInBounds(effect.Attribute) == false)
+	{
+		// NB: I suppose this is the nuclear option
+		// but I would prefer an obvious bad outcome
+		// from a bad input during runtime
+		currentAttributes.fill(std::numeric_limits<int>().min());
+		return;
+	}
 	if (effect.Operation == EffectOperation::EffectOperation_Set)
 	{
 		currentAttributes[effect.Attribute] = effect.Modification;
@@ -114,4 +137,23 @@ void LayeredAttributes::updateCurrentAttributes(const LayeredEffectDefinition& e
 void LayeredAttributes::logError([[maybe_unused]] LayeredEffectDefinition effect)
 {
 	// Imagine that this method writes something useful to glog or similar logging service
+}
+
+void LayeredAttributes::logError([[maybe_unused]] AttributeKey attribute) const
+{
+	// Imagine that this method writes something useful to glog or similar logging service
+}
+
+bool LayeredAttributes::attributeInBounds(AttributeKey attribute) const
+{
+	bool outOfBounds = attribute < 0 || attribute >= NumAttributes;
+	if (errorLoggingEnabled)
+	{
+		logError(attribute);
+	}
+	if (errorHandlingEnabled)
+	{
+		throw std::out_of_range("Attribute out of range");
+	}
+	return !outOfBounds;
 }
