@@ -129,13 +129,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="LayeredAttributes.cpp" />
+    <ClCompile Include="LayeredAttributes_v1.cpp" />
+    <ClCompile Include="LayeredAttributes_v2.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ILayeredAttributes.hpp" />
-    <ClInclude Include="LayeredAttributes.hpp" />
+    <ClInclude Include="LayeredAttributes_v2.hpp" />
     <ClInclude Include="LayeredAttributesUnitTests.hpp" />
+    <ClInclude Include="LayeredAttributes_v1.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
