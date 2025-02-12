@@ -30,6 +30,9 @@
     <ClCompile Include="LayeredAttributes_v3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LayeredAttributesUnitTests.cpp">
+      <Filter>Unit Tests</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ILayeredAttributes.hpp">
