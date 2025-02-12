@@ -34,4 +34,5 @@ private:
 	void logError(LayeredEffectDefinition effect);
 	void logError(AttributeKey attribute) const;
 	bool attributeInBounds(AttributeKey attribute) const;
+	void consolidateOperands(const LayeredEffectDefinition& effect, std::vector<Mod>& vecMods, Mod& mod);
 };
