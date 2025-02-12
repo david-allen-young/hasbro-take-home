@@ -24,6 +24,10 @@ void LayeredAttributes::SetBaseAttribute(AttributeKey attribute, int value)
 		// from a bad input during runtime
 		baseAttributes.fill(std::numeric_limits<int>().min());
 	}
+	// NB: This has the disadvantage of recalculating
+	// each time SetBaseAttribute is called, however
+	// I see no way to implement a batch set of all attributes
+	// while maintaining the sanctity of the given interface
 	recalculateCurrentAttributes();
 }
 
