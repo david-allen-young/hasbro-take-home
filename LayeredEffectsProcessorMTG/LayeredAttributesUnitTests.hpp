@@ -15,6 +15,10 @@ public:
 		testAddAndClear();
 		testComplexAdd();
 	}
+	void runCrashTests()
+	{
+		testOutOfBounds();
+	}
 private:
 	void testSetAndGet()
 	{
@@ -122,5 +126,11 @@ private:
 		assert(attributes.GetCurrentAttribute(AttributeKey::AttributeKey_Power) == 8);
 		assert(attributes.GetCurrentAttribute(AttributeKey::AttributeKey_Toughness) == 2);
 		std::cout << "testComplexAdd passed" << std::endl;
+	}
+	void testOutOfBounds()
+	{
+		LayeredAttributes attributes(true,true);
+		attributes.SetBaseAttribute(AttributeKey(-1), 2);
+		attributes.SetBaseAttribute(AttributeKey(100), 1);
 	}
 };
