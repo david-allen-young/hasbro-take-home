@@ -160,11 +160,11 @@ void LayeredAttributes::logError([[maybe_unused]] AttributeKey attribute) const
 bool LayeredAttributes::attributeInBounds(AttributeKey attribute) const
 {
 	bool outOfBounds = attribute < 0 || attribute >= NumAttributes;
-	if (errorLoggingEnabled)
+	if (outOfBounds && errorLoggingEnabled)
 	{
 		logError(attribute);
 	}
-	if (errorHandlingEnabled)
+	if (outOfBounds && errorHandlingEnabled)
 	{
 		throw std::out_of_range("Attribute out of range");
 	}
