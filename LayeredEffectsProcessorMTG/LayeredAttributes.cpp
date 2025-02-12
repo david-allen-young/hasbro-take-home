@@ -1,7 +1,7 @@
 #include "LayeredAttributes.hpp"
 #include <stdexcept>
 
-LayeredAttributes::LayeredAttributes(bool errorLoggingEnabled, bool errorHandlingEnabled, int reservationSize)
+LayeredAttributes::LayeredAttributes(bool errorLoggingEnabled, bool errorHandlingEnabled, size_t reservationSize)
 	: errorLoggingEnabled(errorLoggingEnabled), errorHandlingEnabled(errorHandlingEnabled), reservationSize(reservationSize)
 {
 	baseAttributes.fill(0);
@@ -57,7 +57,7 @@ void LayeredAttributes::AddLayeredEffect(LayeredEffectDefinition effect)
 		// 10 seemed like a reasonable number of slots to reserve given the mechanics of the card game
 		// (the interface and instructions are ambiguous as to volume of calls)
 		layeredEffects[effect.Layer] = std::vector<LayeredEffectDefinition>();
-		layeredEffects[effect.Layer].reserve(reservationSize);
+		layeredEffects[effect.Layer].reserve(std::max(1ULL, reservationSize));
 	}
 	layeredEffects[effect.Layer].push_back(effect);
 	if (shouldRecalculate)

@@ -7,7 +7,7 @@
 class LayeredAttributes : public ILayeredAttributes
 {
 public:
-	LayeredAttributes(bool errorLoggingEnabled = false, bool errorHandlingEnabled = false, int rereservationSize = 10);
+	LayeredAttributes(bool errorLoggingEnabled = false, bool errorHandlingEnabled = false, size_t rereservationSize = 10ULL);
 	virtual ~LayeredAttributes() = default;
 	void SetBaseAttribute(AttributeKey attribute, int value) override;
     int GetCurrentAttribute(AttributeKey attribute) const override;
@@ -17,7 +17,7 @@ public:
 private:
 	bool errorLoggingEnabled;
 	bool errorHandlingEnabled;
-	int reservationSize;
+	size_t reservationSize;
 
 	static const size_t NumAttributes = AttributeKey::AttributeKey_Controller + 1;
 	std::array<int, NumAttributes> baseAttributes;
