@@ -54,13 +54,11 @@ void LayeredAttributes_v3::AddLayeredEffect(LayeredEffectDefinition effect)
 		vecMods.reserve(attributeModifiers[effect.Attribute][effect.Layer].size() + reservationSize);
 	}
 	Mod mod = { effect.Operation, effect.Modification };
-
-	//consolidateOperands(effect, vecMods, mod);
-	//attributeModifiers[effect.Attribute][effect.Layer].push_back(mod);
-
 	if (!vecMods.empty() && vecMods.back().operation == effect.Operation)
 	{
 		// consolidate operands where possible
+		// so there are less mods to iterate through
+		// during calls to ::calculateAndCache()
 		if (mod.operation == EffectOperation_Set)
 		{
 			vecMods.back().modifier = mod.modifier;
@@ -78,7 +76,6 @@ void LayeredAttributes_v3::AddLayeredEffect(LayeredEffectDefinition effect)
 	{
 		vecMods.push_back(mod);
 	}
-
 	highestLayers[effect.Attribute] = std::max(highestLayers[effect.Attribute], effect.Layer);
 	if (effect.Layer < highestLayers[effect.Attribute])
 	{
@@ -121,27 +118,6 @@ bool LayeredAttributes_v3::attributeInBounds(AttributeKey attribute) const
 		throw std::out_of_range("Attribute out of range");
 	}
 	return !outOfBounds;
-}
-
-void LayeredAttributes_v3::consolidateOperands(const LayeredEffectDefinition& effect, std::vector<Mod>& vecMods, Mod& mod)
-{
-	if (!vecMods.empty() && vecMods.back().operation == effect.Operation)
-	{
-		if (mod.operation == EffectOperation_Set)
-		{
-			vecMods.pop_back();
-		}
-		else if (mod.operation == EffectOperation_Add || mod.operation == EffectOperation_Subtract)
-		{
-			mod.modifier += vecMods.back().modifier;
-			vecMods.pop_back();
-		}
-		else if (mod.operation == EffectOperation_Multiply)
-		{
-			mod.modifier *= vecMods.back().modifier;
-			vecMods.pop_back();
-		}
-	}
 }
 
 void LayeredAttributes_v3::calculateAndCache(AttributeKey attribute)
