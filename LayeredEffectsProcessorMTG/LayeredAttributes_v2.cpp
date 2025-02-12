@@ -107,9 +107,7 @@ void LayeredAttributes_v2::AddLayeredEffect(LayeredEffectDefinition effect)
 //all current attributes will be equal to the base attributes.
 void LayeredAttributes_v2::ClearLayeredEffects()
 {
-	// TODO: Replace this code
-	//layeredEffects.clear();
-	//currentAttributes = baseAttributes;
+	attributeModifiers = {};
 }
 
 void LayeredAttributes_v2::recalculateCurrentAttributes()
