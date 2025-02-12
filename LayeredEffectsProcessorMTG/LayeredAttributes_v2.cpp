@@ -77,9 +77,6 @@ int LayeredAttributes_v2::GetCurrentAttribute(AttributeKey attribute) const
 //applied in the same order they were added. (see LayeredEffectDefinition.Layer)
 void LayeredAttributes_v2::AddLayeredEffect(LayeredEffectDefinition effect)
 {
-	//bool shouldRecalculate = effect.Layer < highestLayer;
-	//highestLayer = std::max(highestLayer, effect.Layer);
-
 	if (attributeModifiers[effect.Attribute].count(effect.Layer) == 0)
 	{
 		attributeModifiers[effect.Attribute].insert({ effect.Layer, std::vector<Mod>() });
@@ -92,15 +89,6 @@ void LayeredAttributes_v2::AddLayeredEffect(LayeredEffectDefinition effect)
 	Mod mod = { effect.Operation, effect.Modification };
 	consolidateOperands(effect, vecMods, mod);
 	attributeModifiers[effect.Attribute][effect.Layer].push_back(mod);
-
-	//if (shouldRecalculate)
-	//{
-	//	recalculateCurrentAttributes();
-	//}
-	//else
-	//{
-	//	updateCurrentAttributes(effect);
-	//}
 }
 
 //Removes all layered effects from this object. After this call,
