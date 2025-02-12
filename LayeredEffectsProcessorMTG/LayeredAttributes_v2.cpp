@@ -110,64 +110,6 @@ void LayeredAttributes_v2::ClearLayeredEffects()
 	attributeModifiers = {};
 }
 
-
-
-void LayeredAttributes_v2::updateCurrentAttributes(const LayeredEffectDefinition& effect)
-{
-	//if (attributeInBounds(effect.Attribute) == false)
-	//{
-	//	// NB: I suppose this is the nuclear option
-	//	// but I would prefer an obvious bad outcome
-	//	// from a bad input during runtime
-	//	currentAttributes.fill(std::numeric_limits<int>().min());
-	//	return;
-	//}
-	//if (effect.Operation == EffectOperation::EffectOperation_Set)
-	//{
-	//	currentAttributes[effect.Attribute] = effect.Modification;
-	//}
-	//else if (effect.Operation == EffectOperation::EffectOperation_Add)
-	//{
-	//	currentAttributes[effect.Attribute] += effect.Modification;
-	//}
-	//else if (effect.Operation == EffectOperation::EffectOperation_Subtract)
-	//{
-	//	currentAttributes[effect.Attribute] -= effect.Modification;
-	//}
-	//else if (effect.Operation == EffectOperation::EffectOperation_Multiply)
-	//{
-	//	currentAttributes[effect.Attribute] *= effect.Modification;
-	//}
-	//else if (effect.Operation == EffectOperation::EffectOperation_BitwiseOr)
-	//{
-	//	currentAttributes[effect.Attribute] |= effect.Modification;
-	//}
-	//else if (effect.Operation == EffectOperation::EffectOperation_BitwiseAnd)
-	//{
-	//	currentAttributes[effect.Attribute] &= effect.Modification;
-	//}
-	//else if (effect.Operation == EffectOperation::EffectOperation_BitwiseXor)
-	//{
-	//	currentAttributes[effect.Attribute] ^= effect.Modification;
-	//}
-	//else //if (effect.Operation == EffectOperation::EffectOperation_Invalid)
-	//{
-	//	// NB: In this case I am not using the nuclear option
-	//	// because the index is in range and the consequence
-	//	// of receiving an Invalid operation is ambiguous
-	//	// with only the interface and instructions provided
-	//	// (refer to ILayeredAttributes.hpp)
-	//	if (errorLoggingEnabled)
-	//	{
-	//		logError(effect);
-	//	}
-	//	if (errorHandlingEnabled)
-	//	{
-	//		throw std::runtime_error("Invalid effect operation");
-	//	}
-	//}
-}
-
 void LayeredAttributes_v2::logError([[maybe_unused]] LayeredEffectDefinition effect)
 {
 	// Imagine that this method writes something useful to glog or similar logging service
