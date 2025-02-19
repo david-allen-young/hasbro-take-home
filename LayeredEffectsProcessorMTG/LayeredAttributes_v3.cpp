@@ -71,6 +71,16 @@ void LayeredAttributes_v3::AddLayeredEffect(LayeredEffectDefinition effect)
 		{
 			vecMods.back().modifier *= mod.modifier;
 		}
+		else if (mod.operation == EffectOperation_BitwiseOr)
+		{
+			vecMods.back().modifier |= mod.modifier;
+		}
+		else if (mod.operation == EffectOperation_BitwiseAnd)
+		{
+			vecMods.back().modifier &= mod.modifier;
+		}
+		// NB: decided against flattening EffectOperation_BitwiseXor (for now)
+		// because I was getting different results depending on input (even vs. odd)
 	}
 	else
 	{

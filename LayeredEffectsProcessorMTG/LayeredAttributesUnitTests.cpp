@@ -15,6 +15,7 @@ void LayeredAttributesUnitTests::runOperationalTests()
 	testSetAndGet();
 	testAddAndClear();
 	testConsolidation();
+	testBitwise();
 	testComplexAdd_v1();
 	testComplexAdd_v2();
 	std::cout << "** Operational tests passed **" << std::endl;
@@ -105,6 +106,13 @@ void LayeredAttributesUnitTests::testConsolidation()
 	int basePower = 2;
 	attributes->SetBaseAttribute(AttributeKey::AttributeKey_Power, basePower);
 	assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) == basePower);
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Subtract, /*modifier*/1, /*layer*/2 });
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Subtract, /*modifier*/1, /*layer*/2 });
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Subtract, /*modifier*/1, /*layer*/2 });
+	assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) == basePower - 3);
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
 	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
 	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
 	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
@@ -117,6 +125,23 @@ void LayeredAttributesUnitTests::testConsolidation()
 	assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) != basePower);
 	assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) == basePower * 4 + 3);
 	std::cout << "testConsolidation passed" << std::endl;
+}
+
+void LayeredAttributesUnitTests::testBitwise()
+{
+	attributes = std::make_unique<Implementation>();
+	int basePower = 3;
+	attributes->SetBaseAttribute(AttributeKey::AttributeKey_Power, basePower);
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_BitwiseAnd, /*modifier*/1, /*layer*/2 });
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_BitwiseAnd, /*modifier*/1, /*layer*/2 });
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_BitwiseAnd, /*modifier*/1, /*layer*/2 });
+	assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) == 1);
+	attributes->ClearLayeredEffects();
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_BitwiseOr, /*modifier*/1, /*layer*/2 });
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_BitwiseOr, /*modifier*/1, /*layer*/2 });
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_BitwiseOr, /*modifier*/1, /*layer*/2 });
+	assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) == 3);
+	std::cout << "testBitwise passed" << std::endl;
 }
 
 void LayeredAttributesUnitTests::testComplexAdd_v1()

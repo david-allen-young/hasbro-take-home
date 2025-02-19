@@ -16,6 +16,7 @@ private:
 	void testSetAndGet();
 	void testAddAndClear();
 	void testConsolidation();
+	void testBitwise();
 	void testComplexAdd_v1();
 	void testComplexAdd_v2();
 
