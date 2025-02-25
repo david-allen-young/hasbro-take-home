@@ -133,6 +133,7 @@
     <ClCompile Include="LayeredAttributes_v1.cpp" />
     <ClCompile Include="LayeredAttributes_v2.cpp" />
     <ClCompile Include="LayeredAttributes_v3.cpp" />
+    <ClCompile Include="LA_v3_Extension_Removals.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -141,6 +142,7 @@
     <ClInclude Include="LayeredAttributesUnitTests.hpp" />
     <ClInclude Include="LayeredAttributes_v1.hpp" />
     <ClInclude Include="LayeredAttributes_v3.hpp" />
+    <ClInclude Include="LA_v3_Extension_Removals.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
