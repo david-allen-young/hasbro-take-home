@@ -16,6 +16,9 @@
     <Filter Include="Unit Tests">
       <UniqueIdentifier>{06d9e394-b288-43ef-9c7d-e3d1ecd74f94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Extensions">
+      <UniqueIdentifier>{ec6aee05-5de8-4d19-9976-b8a431313507}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -33,6 +36,9 @@
     <ClCompile Include="LayeredAttributesUnitTests.cpp">
       <Filter>Unit Tests</Filter>
     </ClCompile>
+    <ClCompile Include="LA_v3_Extension_Removals.cpp">
+      <Filter>Extensions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ILayeredAttributes.hpp">
@@ -49,6 +55,9 @@
     </ClInclude>
     <ClInclude Include="LayeredAttributes_v3.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LA_v3_Extension_Removals.hpp">
+      <Filter>Extensions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
