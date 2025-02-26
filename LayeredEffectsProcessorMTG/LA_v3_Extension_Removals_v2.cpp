@@ -54,35 +54,35 @@ void LA_v3_Extension_Removals_v2::AddLayeredEffect(LayeredEffectDefinition effec
 		vecMods.reserve(attributeModifiers[effect.Attribute][effect.Layer].size() + reservationSize);
 	}
 	Mod mod = { effect.Operation, effect.Modification };
-	if (!vecMods.empty() && vecMods.back().operation == effect.Operation)
-	{
-		// consolidate operands where possible
-		// so there are less mods to iterate through
-		// during calls to ::calculateAndCache()
-		if (mod.operation == EffectOperation_Set)
-		{
-			vecMods.back().modifier = mod.modifier;
-		}
-		else if (mod.operation == EffectOperation_Add || mod.operation == EffectOperation_Subtract)
-		{
-			vecMods.back().modifier += mod.modifier;
-		}
-		else if (mod.operation == EffectOperation_Multiply)
-		{
-			vecMods.back().modifier *= mod.modifier;
-		}
-		else if (mod.operation == EffectOperation_BitwiseOr)
-		{
-			vecMods.back().modifier |= mod.modifier;
-		}
-		else if (mod.operation == EffectOperation_BitwiseAnd)
-		{
-			vecMods.back().modifier &= mod.modifier;
-		}
-		// NB: decided against flattening EffectOperation_BitwiseXor (for now)
-		// because I was getting different results depending on input (even vs. odd)
-	}
-	else
+	//if (!vecMods.empty() && vecMods.back().operation == effect.Operation)
+	//{
+	//	// consolidate operands where possible
+	//	// so there are less mods to iterate through
+	//	// during calls to ::calculateAndCache()
+	//	if (mod.operation == EffectOperation_Set)
+	//	{
+	//		vecMods.back().modifier = mod.modifier;
+	//	}
+	//	else if (mod.operation == EffectOperation_Add || mod.operation == EffectOperation_Subtract)
+	//	{
+	//		vecMods.back().modifier += mod.modifier;
+	//	}
+	//	else if (mod.operation == EffectOperation_Multiply)
+	//	{
+	//		vecMods.back().modifier *= mod.modifier;
+	//	}
+	//	else if (mod.operation == EffectOperation_BitwiseOr)
+	//	{
+	//		vecMods.back().modifier |= mod.modifier;
+	//	}
+	//	else if (mod.operation == EffectOperation_BitwiseAnd)
+	//	{
+	//		vecMods.back().modifier &= mod.modifier;
+	//	}
+	//	// NB: decided against flattening EffectOperation_BitwiseXor (for now)
+	//	// because I was getting different results depending on input (even vs. odd)
+	//}
+	//else
 	{
 		vecMods.push_back(mod);
 	}
@@ -104,6 +104,19 @@ void LA_v3_Extension_Removals_v2::ClearLayeredEffects()
 	attributeModifiers = {};
 	currentAttributes = baseAttributes;
 	highestLayers.fill(std::numeric_limits<int>::min());
+}
+
+void LA_v3_Extension_Removals_v2::RemoveLayeredEffect(size_t uid)
+{
+	auto it = uidMap.find(uid);
+	if(it == uidMap.end())
+	{
+		// handle error
+		return;
+	}
+	auto [attribute, layer, rank] = it->second;
+	attributeModifiers[attribute][layer][rank].operation = EffectOperation::EffectOperation_Invalid;
+	attributeModifiers[attribute][layer][rank].modifier = std::numeric_limits<int>::min();
 }
 
 void LA_v3_Extension_Removals_v2::logError([[maybe_unused]] LayeredEffectDefinition effect)
