@@ -1,7 +1,7 @@
-#include "LayeredAttributes_v3.hpp"
+#include "LA_v3_Extension_Removals_v2.hpp"
 #include <stdexcept>
 
-LayeredAttributes_v3::LayeredAttributes_v3(bool errorLoggingEnabled, bool errorHandlingEnabled, size_t reservationSize)
+LA_v3_Extension_Removals_v2::LA_v3_Extension_Removals_v2(bool errorLoggingEnabled, bool errorHandlingEnabled, size_t reservationSize)
 	: errorLoggingEnabled(errorLoggingEnabled), errorHandlingEnabled(errorHandlingEnabled), reservationSize(std::max(1ULL, reservationSize))
 {
 	baseAttributes.fill(0);
@@ -12,7 +12,7 @@ LayeredAttributes_v3::LayeredAttributes_v3(bool errorLoggingEnabled, bool errorH
 //Set the base value for an attribute on this object. All base values
 //default to 0 until set. Note that resetting a base attribute does not
 //alter any existing layered effects.
-void LayeredAttributes_v3::SetBaseAttribute(AttributeKey attribute, int value)
+void LA_v3_Extension_Removals_v2::SetBaseAttribute(AttributeKey attribute, int value)
 {
 	if (attributeInBounds(attribute))
 	{
@@ -24,7 +24,7 @@ void LayeredAttributes_v3::SetBaseAttribute(AttributeKey attribute, int value)
 //Return the current value for an attribute on this object. Will
 //be equal to the base value, modified by any applicable layered
 //effects.
-int LayeredAttributes_v3::GetCurrentAttribute(AttributeKey attribute) const
+int LA_v3_Extension_Removals_v2::GetCurrentAttribute(AttributeKey attribute) const
 {
 	if (attributeInBounds(attribute) == false)
 	{
@@ -38,7 +38,7 @@ int LayeredAttributes_v3::GetCurrentAttribute(AttributeKey attribute) const
 //applied. Note that any number of layered effects may be applied
 //at any given time. Also note that layered effects are not necessarily
 //applied in the same order they were added. (see LayeredEffectDefinition.Layer)
-void LayeredAttributes_v3::AddLayeredEffect(LayeredEffectDefinition effect)
+void LA_v3_Extension_Removals_v2::AddLayeredEffect(LayeredEffectDefinition effect)
 {
 	if (attributeInBounds(effect.Attribute) == false)
 	{
@@ -99,24 +99,24 @@ void LayeredAttributes_v3::AddLayeredEffect(LayeredEffectDefinition effect)
 
 //Removes all layered effects from this object. After this call,
 //all current attributes will be equal to the base attributes.
-void LayeredAttributes_v3::ClearLayeredEffects()
+void LA_v3_Extension_Removals_v2::ClearLayeredEffects()
 {
 	attributeModifiers = {};
 	currentAttributes = baseAttributes;
 	highestLayers.fill(std::numeric_limits<int>::min());
 }
 
-void LayeredAttributes_v3::logError([[maybe_unused]] LayeredEffectDefinition effect)
+void LA_v3_Extension_Removals_v2::logError([[maybe_unused]] LayeredEffectDefinition effect)
 {
 	// Imagine that this method writes something useful to glog or similar logging service
 }
 
-void LayeredAttributes_v3::logError([[maybe_unused]] AttributeKey attribute) const
+void LA_v3_Extension_Removals_v2::logError([[maybe_unused]] AttributeKey attribute) const
 {
 	// Imagine that this method writes something useful to glog or similar logging service
 }
 
-bool LayeredAttributes_v3::attributeInBounds(AttributeKey attribute) const
+bool LA_v3_Extension_Removals_v2::attributeInBounds(AttributeKey attribute) const
 {
 	bool outOfBounds = attribute < 0 || attribute >= NumAttributes;
 	if (outOfBounds && errorLoggingEnabled)
@@ -130,7 +130,7 @@ bool LayeredAttributes_v3::attributeInBounds(AttributeKey attribute) const
 	return !outOfBounds;
 }
 
-void LayeredAttributes_v3::calculateAndCache(AttributeKey attribute)
+void LA_v3_Extension_Removals_v2::calculateAndCache(AttributeKey attribute)
 {
 	int result = baseAttributes[attribute];
 	for (const auto& [layer, mods] : attributeModifiers[attribute])
@@ -170,7 +170,7 @@ void LayeredAttributes_v3::calculateAndCache(AttributeKey attribute)
 	currentAttributes[attribute] = result;
 }
 
-void LayeredAttributes_v3::updateCache(AttributeKey attribute, const Mod& mod)
+void LA_v3_Extension_Removals_v2::updateCache(AttributeKey attribute, const Mod& mod)
 {
 	if (mod.operation == EffectOperation::EffectOperation_Set)
 	{
