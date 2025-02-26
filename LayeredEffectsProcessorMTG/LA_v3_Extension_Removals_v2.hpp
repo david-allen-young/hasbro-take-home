@@ -2,6 +2,7 @@
 #include "ILayeredAttributes.hpp"
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include <array>
 
 class LA_v3_Extension_Removals_v2 : public ILayeredAttributes
@@ -14,10 +15,22 @@ public:
 	void AddLayeredEffect(LayeredEffectDefinition effect) override;
 	void ClearLayeredEffects() override;
 
+	void RemoveLayeredEffect(size_t uid);
+
 private:
 	bool errorLoggingEnabled;
 	bool errorHandlingEnabled;
 	size_t reservationSize;
+
+	size_t currentUID = 0;
+	int createUID() { return currentUID++; }
+	struct ModIndex
+	{
+		AttributeKey attribute;
+		int layer = -1;
+		int rank = -1;
+	};
+	std::unordered_map<size_t, ModIndex> uidMap;
 
 	static const size_t NumAttributes = AttributeKey::AttributeKey_Controller + 1;
 	std::array<int, NumAttributes> baseAttributes, currentAttributes, highestLayers;
