@@ -39,6 +39,9 @@
     <ClCompile Include="LA_v3_Extension_Removals.cpp">
       <Filter>Extensions</Filter>
     </ClCompile>
+    <ClCompile Include="LA_v3_Extension_Removals_v2.cpp">
+      <Filter>Extensions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ILayeredAttributes.hpp">
@@ -57,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LA_v3_Extension_Removals.hpp">
+      <Filter>Extensions</Filter>
+    </ClInclude>
+    <ClInclude Include="LA_v3_Extension_Removals_v2.hpp">
       <Filter>Extensions</Filter>
     </ClInclude>
   </ItemGroup>
