@@ -46,45 +46,48 @@ void LA_v3_Extension_Removals::AddLayeredEffect(LayeredEffectDefinition effect)
 	}
 	if (attributeModifiers[effect.Attribute].count(effect.Layer) == 0)
 	{
-		attributeModifiers[effect.Attribute].insert({ effect.Layer, std::vector<Mod>() });
+		attributeModifiers[effect.Attribute].insert({ effect.Layer, {} });
 	}
-	auto& vecMods = attributeModifiers[effect.Attribute][effect.Layer];
-	if (vecMods.capacity() < vecMods.size() + 1)
+	auto& mapMods = attributeModifiers[effect.Attribute][effect.Layer];
+	//auto& vecMods = attributeModifiers[effect.Attribute][effect.Layer];
+	//if (vecMods.capacity() < vecMods.size() + 1)
+	//{
+	//	vecMods.reserve(attributeModifiers[effect.Attribute][effect.Layer].size() + reservationSize);
+	//}
+	Mod mod = { effect.Operation, effect.Modification, createUID()};
+	//if (!vecMods.empty() && vecMods.back().operation == effect.Operation)
+	//{
+	//	// consolidate operands where possible
+	//	// so there are less mods to iterate through
+	//	// during calls to ::calculateAndCache()
+	//	if (mod.operation == EffectOperation_Set)
+	//	{
+	//		vecMods.back().modifier = mod.modifier;
+	//	}
+	//	else if (mod.operation == EffectOperation_Add || mod.operation == EffectOperation_Subtract)
+	//	{
+	//		vecMods.back().modifier += mod.modifier;
+	//	}
+	//	else if (mod.operation == EffectOperation_Multiply)
+	//	{
+	//		vecMods.back().modifier *= mod.modifier;
+	//	}
+	//	else if (mod.operation == EffectOperation_BitwiseOr)
+	//	{
+	//		vecMods.back().modifier |= mod.modifier;
+	//	}
+	//	else if (mod.operation == EffectOperation_BitwiseAnd)
+	//	{
+	//		vecMods.back().modifier &= mod.modifier;
+	//	}
+	//	// NB: decided against flattening EffectOperation_BitwiseXor (for now)
+	//	// because I was getting different results depending on input (even vs. odd)
+	//}
+	//else
 	{
-		vecMods.reserve(attributeModifiers[effect.Attribute][effect.Layer].size() + reservationSize);
-	}
-	Mod mod = { effect.Operation, effect.Modification };
-	if (!vecMods.empty() && vecMods.back().operation == effect.Operation)
-	{
-		// consolidate operands where possible
-		// so there are less mods to iterate through
-		// during calls to ::calculateAndCache()
-		if (mod.operation == EffectOperation_Set)
-		{
-			vecMods.back().modifier = mod.modifier;
-		}
-		else if (mod.operation == EffectOperation_Add || mod.operation == EffectOperation_Subtract)
-		{
-			vecMods.back().modifier += mod.modifier;
-		}
-		else if (mod.operation == EffectOperation_Multiply)
-		{
-			vecMods.back().modifier *= mod.modifier;
-		}
-		else if (mod.operation == EffectOperation_BitwiseOr)
-		{
-			vecMods.back().modifier |= mod.modifier;
-		}
-		else if (mod.operation == EffectOperation_BitwiseAnd)
-		{
-			vecMods.back().modifier &= mod.modifier;
-		}
-		// NB: decided against flattening EffectOperation_BitwiseXor (for now)
-		// because I was getting different results depending on input (even vs. odd)
-	}
-	else
-	{
-		vecMods.push_back(mod);
+		//vecMods.push_back(mod);
+		mapMods[mod.uid] = mod;
+		modIndexes[mod.uid] = { effect.Layer, mod.uid, effect.Attribute };
 	}
 	highestLayers[effect.Attribute] = std::max(highestLayers[effect.Attribute], effect.Layer);
 	if (effect.Layer < highestLayers[effect.Attribute])
@@ -104,6 +107,54 @@ void LA_v3_Extension_Removals::ClearLayeredEffects()
 	attributeModifiers = {};
 	currentAttributes = baseAttributes;
 	highestLayers.fill(std::numeric_limits<int>::min());
+}
+
+bool LA_v3_Extension_Removals::RemoveLayeredEffect(size_t uid)
+{
+	auto it1 = modIndexes.find(uid);
+	if (it1 == modIndexes.end())
+	{
+		// handle error
+		return false;
+	}
+	//auto [layer, key, attribute] = modIndexes[uid];
+	auto [layer, key, attribute] = it1->second;
+	//modIndexes.erase(uid);
+	modIndexes.erase(it1);
+	auto it2 = attributeModifiers[attribute].find(layer);
+	if (it2 == attributeModifiers[attribute].end())
+	{
+		// handle error
+		return false;
+	}
+	//auto& mapMods = attributeModifiers[attribute][layer];
+	auto& mapMods = it2->second;
+	if (mapMods.find(key) == mapMods.end())
+	{
+		// handle error
+		return false;
+	}
+	mapMods.erase(key);
+	if (mapMods.empty())
+	{
+		//attributeModifiers[attribute].erase(layer);
+		attributeModifiers[attribute].erase(it2);
+		if (attributeModifiers[attribute].empty())
+		{
+			highestLayers[attribute] = std::numeric_limits<int>::min();
+		}
+		else
+		{
+			highestLayers[attribute] = attributeModifiers[attribute].rbegin()->first;
+		}
+	}
+	calculateAndCache(attribute);
+	return true;
+}
+
+size_t LA_v3_Extension_Removals::createUID()
+{
+	return ++currentUID;
 }
 
 void LA_v3_Extension_Removals::logError([[maybe_unused]] LayeredEffectDefinition effect)
@@ -135,7 +186,7 @@ void LA_v3_Extension_Removals::calculateAndCache(AttributeKey attribute)
 	int result = baseAttributes[attribute];
 	for (const auto& [layer, mods] : attributeModifiers[attribute])
 	{
-		for (const auto& mod : mods)
+		for (const auto& [key, mod] : mods)
 		{
 			if (mod.operation == EffectOperation::EffectOperation_Set)
 			{
