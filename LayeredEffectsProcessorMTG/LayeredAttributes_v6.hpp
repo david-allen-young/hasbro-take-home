@@ -11,7 +11,7 @@ public:
 		std::swap(effectDef, this->effectDef);
 		std::swap(timestamp, this->timestamp);
 	}
-	int getAttribute() const { return effectDef.Attribute; }
+	AttributeKey getAttribute() const { return effectDef.Attribute; }
 	int getOperation() const { return effectDef.Operation; }
 	int getModification() const { return effectDef.Modification; }
 	int getLayer() const { return effectDef.Layer; }
@@ -56,7 +56,10 @@ private:
 	void logError(AttributeKey attribute) const;
 
 	//bool attributeInBounds(AttributeKey attribute) const;
-	//void calculateAndCache(AttributeKey attribute) const;
+
+	mutable std::unordered_map<AttributeKey, int> cache;
+	int calculate(AttributeKey attribute) const;
+
 	//void updateCache(AttributeKey attribute, const Mod& mod) const;
 
 	size_t nextTimestamp = 0;

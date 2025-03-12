@@ -21,41 +21,7 @@ void LayeredAttributes_v6::SetBaseAttribute(AttributeKey attribute, int value)
 //effects.
 int LayeredAttributes_v6::GetCurrentAttribute(AttributeKey attribute) const
 {
-	// the map defaults to zero if no key is present
-	int result = baseAttributes[attribute];
-
-	std::sort(effects.begin(), effects.end(), EffectComparator());
-	for (auto& effect : effects)
-	{
-		if (effect.getAttribute() == attribute)
-		{
-			if (effect.getOperation() == EffectOperation_Set)
-			{
-				result = effect.getModification();
-			}
-			else if(effect.getOperation() == EffectOperation_Add)
-			{
-				result += effect.getModification();
-			}
-			else if (effect.getOperation() == EffectOperation_Subtract)
-			{
-				result -= effect.getModification();
-			}
-			else if (effect.getOperation() == EffectOperation_Multiply)
-			{
-				result *= effect.getModification();
-			}
-			else if (effect.getOperation() == EffectOperation_BitwiseOr)
-			{
-				result |= effect.getModification();
-			}
-			else if (effect.getOperation() == EffectOperation_BitwiseAnd)
-			{
-				result &= effect.getModification();
-			}
-		}
-	}
-
+	int result = calculate(attribute);
 	return result;
 }
 
@@ -86,6 +52,47 @@ void LayeredAttributes_v6::logError([[maybe_unused]] LayeredEffectDefinition eff
 void LayeredAttributes_v6::logError([[maybe_unused]] AttributeKey attribute) const
 {
 	// Imagine that this method writes something useful to glog or similar logging service
+}
+
+int LayeredAttributes_v6::calculate(AttributeKey attribute) const
+{
+	// the map defaults to zero if no key is present
+	int result = baseAttributes[attribute];
+
+	std::sort(effects.begin(), effects.end(), EffectComparator());
+	for (auto& effect : effects)
+	{
+		if (effect.getAttribute() != attribute)
+		{
+			continue;
+		}
+		if (effect.getOperation() == EffectOperation_Set)
+		{
+			result = effect.getModification();
+		}
+		else if (effect.getOperation() == EffectOperation_Add)
+		{
+			result += effect.getModification();
+		}
+		else if (effect.getOperation() == EffectOperation_Subtract)
+		{
+			result -= effect.getModification();
+		}
+		else if (effect.getOperation() == EffectOperation_Multiply)
+		{
+			result *= effect.getModification();
+		}
+		else if (effect.getOperation() == EffectOperation_BitwiseOr)
+		{
+			result |= effect.getModification();
+		}
+		else if (effect.getOperation() == EffectOperation_BitwiseAnd)
+		{
+			result &= effect.getModification();
+		}
+	}
+
+	return result;
 }
 
 
