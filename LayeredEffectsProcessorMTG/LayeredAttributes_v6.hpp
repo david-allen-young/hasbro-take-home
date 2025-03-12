@@ -51,6 +51,7 @@ private:
 
 	mutable std::unordered_map<AttributeKey, int> baseAttributes;
 	mutable std::vector<Effect> effects;
+	mutable bool effectsUnsorted = true;
 
 	void logError(LayeredEffectDefinition effectDef);
 	void logError(AttributeKey attribute) const;

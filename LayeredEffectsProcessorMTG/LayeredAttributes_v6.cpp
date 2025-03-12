@@ -44,6 +44,7 @@ void LayeredAttributes_v6::AddLayeredEffect(LayeredEffectDefinition effectDef)
 		effects.reserve(effects.size() + reservationSize);
 	}
 	effects.push_back(effect);
+	effectsUnsorted = true;
 	cache.erase(effect.getAttribute());
 }
 
@@ -70,7 +71,12 @@ int LayeredAttributes_v6::calculate(AttributeKey attribute) const
 	// the map defaults to zero if no key is present
 	int result = baseAttributes[attribute];
 
-	std::sort(effects.begin(), effects.end(), EffectComparator());
+	if (effectsUnsorted)
+	{
+		std::sort(effects.begin(), effects.end(), EffectComparator());
+		effectsUnsorted = false;
+	}
+
 	for (auto& effect : effects)
 	{
 		if (effect.getAttribute() != attribute)
