@@ -10,8 +10,7 @@ void LayeredAttributesUnitTests_v2::runOperationalTests()
 {
 	testSetAndGet();
 	testAddAndClear();
-	//testConsolidation();
-	//testBitwise();
+	testBitwise();
 	//testComplexAdd_v1();
 	//testComplexAdd_v2();
 	std::cout << "** Operational tests passed **" << std::endl;
