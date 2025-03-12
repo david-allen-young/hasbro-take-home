@@ -39,22 +39,22 @@ void LayeredAttributes_v6::AddLayeredEffect(LayeredEffectDefinition effectDef)
 {
 	int timestamp = getNextTimestamp();
 	auto effect = Effect(effectDef, timestamp);
-	if (!effects.empty())
+	if (!effects.empty() && effects.back().getLayer() > effect.getLayer())
 	{
-		AttributeKey attribute = effect.getAttribute();
-		if (effects.back().getLayer() > effect.getLayer())
+		effectsUnsorted = true;
+	}
+	AttributeKey attribute = effect.getAttribute();
+	if (effectsUnsorted)
+	{
+		cache.erase(attribute);
+	}
+	else
+	{
+		if (cache.count(attribute) == 0)
 		{
-			effectsUnsorted = true;
-			cache.erase(attribute);
+			cache[attribute] = calculate(attribute);
 		}
-		else
-		{
-			if (cache.count(attribute) == 0)
-			{
-				cache[attribute] = baseAttributes[attribute];
-			}
-			update(effect, cache[attribute]);
-		}
+		update(effect, cache[attribute]);
 	}
 	if (effects.size() + 1 > reservationSize)
 	{
@@ -99,6 +99,7 @@ int LayeredAttributes_v6::calculate(AttributeKey attribute) const
 			continue;
 		}
 		update(effect, result);
+		// TODO: remove or flatten effects that have been calculated
 	}
 
 	return result;
