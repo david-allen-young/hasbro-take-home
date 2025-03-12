@@ -1,4 +1,5 @@
-#include "LayeredAttributesUnitTests.hpp"
+//#include "LayeredAttributesUnitTests.hpp"
+#include "LayeredAttributesUnitTests_v2.hpp"
 
 //
 #include <vector>
@@ -7,7 +8,7 @@
 
 int main()
 {
-	LayeredAttributesUnitTests tests;
+	LayeredAttributesUnitTests_v2 tests;
 	tests.runOperationalTests();
 	tests.runCrashTests(); 
 
