@@ -50,18 +50,19 @@ int LayeredAttributes_v5::GetCurrentAttribute(AttributeKey attribute) const
 //applied in the same order they were added. (see LayeredEffectDefinition.Layer)
 void LayeredAttributes_v5::AddLayeredEffect(LayeredEffectDefinition effect)
 {
-	if (attributeInBounds(effect.Attribute) == false)
+	//if (attributeInBounds(effect.Attribute) == false)
+	if(attributeModifiers.find(effect.Attribute) == attributeModifiers.end())
 	{
 		return;
 	}
-	if (attributeModifiers[effect.Attribute].count(effect.Layer) == 0)
+	if (attributeModifiers[effect.Attribute].first.count(effect.Layer) == 0)
 	{
-		attributeModifiers[effect.Attribute].insert({ effect.Layer, std::vector<Mod>() });
+		attributeModifiers[effect.Attribute].first.insert({ effect.Layer, std::vector<Mod>() });
 	}
-	auto& vecMods = attributeModifiers[effect.Attribute][effect.Layer];
+	auto& vecMods = attributeModifiers[effect.Attribute].first[effect.Layer];
 	if (vecMods.capacity() < vecMods.size() + 1)
 	{
-		vecMods.reserve(attributeModifiers[effect.Attribute][effect.Layer].size() + reservationSize);
+		vecMods.reserve(attributeModifiers[effect.Attribute].first[effect.Layer].size() + reservationSize);
 	}
 	Mod mod = { effect.Operation, effect.Modification };
 	if (!vecMods.empty() && vecMods.back().operation == effect.Operation)
@@ -119,13 +120,16 @@ void LayeredAttributes_v5::AddLayeredEffect(LayeredEffectDefinition effect)
 //all current attributes will be equal to the base attributes.
 void LayeredAttributes_v5::ClearLayeredEffects()
 {
-	attributeModifiers = {};
+	//attributeModifiers = {};
+	attributeModifiers.clear();
 	currentAttributes = baseAttributes;
-	highestLayers.fill(std::numeric_limits<int>::min());
-	for (int attribute = 0; attribute < NumAttributes; attribute++)
-	{
-		attributeDirty[attribute] = false;
-	}
+	//highestLayers.fill(std::numeric_limits<int>::min());
+	highestLayers.clear();
+	//for (int attribute = 0; attribute < NumAttributes; attribute++)
+	//{
+	//	attributeDirty[attribute] = false;
+	//}
+	attributeDirty.clear();
 }
 
 void LayeredAttributes_v5::logError([[maybe_unused]] LayeredEffectDefinition effect)
@@ -138,24 +142,25 @@ void LayeredAttributes_v5::logError([[maybe_unused]] AttributeKey attribute) con
 	// Imagine that this method writes something useful to glog or similar logging service
 }
 
-bool LayeredAttributes_v5::attributeInBounds(AttributeKey attribute) const
+bool LayeredAttributes_v5::attributeInBounds([[maybe_unused]]AttributeKey attribute) const
 {
-	bool outOfBounds = attribute < 0 || attribute >= NumAttributes;
-	if (outOfBounds && errorLoggingEnabled)
-	{
-		logError(attribute);
-	}
-	if (outOfBounds && errorHandlingEnabled)
-	{
-		throw std::out_of_range("Attribute out of range");
-	}
-	return !outOfBounds;
+	//bool outOfBounds = attribute < 0 || attribute >= NumAttributes;
+	//if (outOfBounds && errorLoggingEnabled)
+	//{
+	//	logError(attribute);
+	//}
+	//if (outOfBounds && errorHandlingEnabled)
+	//{
+	//	throw std::out_of_range("Attribute out of range");
+	//}
+	//return !outOfBounds;
+	return false;
 }
 
 void LayeredAttributes_v5::calculateAndCache(AttributeKey attribute) const
 {
 	int result = baseAttributes[attribute];
-	for (const auto& [layer, mods] : attributeModifiers[attribute])
+	for (const auto& [layer, mods] : attributeModifiers[attribute].first)
 	{
 		for (const auto& mod : mods)
 		{
