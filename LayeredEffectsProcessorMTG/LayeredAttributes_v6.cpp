@@ -50,17 +50,17 @@ void LayeredAttributes_v6::logError([[maybe_unused]] AttributeKey attribute) con
 	// Imagine that this method writes something useful to glog or similar logging service
 }
 
-bool LayeredAttributes_v6::attributeInBounds([[maybe_unused]]AttributeKey attribute) const
-{
-	return false;
-}
-
-void LayeredAttributes_v6::calculateAndCache(AttributeKey attribute) const
-{
-
-}
-
-void LayeredAttributes_v6::updateCache(AttributeKey attribute, const Mod& mod) const
-{
-
-}
+//bool LayeredAttributes_v6::attributeInBounds([[maybe_unused]]AttributeKey attribute) const
+//{
+//	return false;
+//}
+//
+//void LayeredAttributes_v6::calculateAndCache(AttributeKey attribute) const
+//{
+//
+//}
+//
+//void LayeredAttributes_v6::updateCache(AttributeKey attribute, const Mod& mod) const
+//{
+//
+//}
