@@ -2,10 +2,10 @@
 #include <memory>
 #include "ILayeredAttributes.hpp"
 
-class LayeredAttributesUnitTests
+class LayeredAttributesUnitTests_v2
 {
 public:
-	LayeredAttributesUnitTests() = default;
+	LayeredAttributesUnitTests_v2() = default;
 	void runOperationalTests();
 	void runCrashTests(); // may throw errors
 
