@@ -41,18 +41,19 @@ void LayeredAttributes_v6::AddLayeredEffect(LayeredEffectDefinition effectDef)
 	auto effect = Effect(effectDef, timestamp);
 	if (!effects.empty())
 	{
+		AttributeKey attribute = effect.getAttribute();
 		if (effects.back().getLayer() > effect.getLayer())
 		{
 			effectsUnsorted = true;
-			cache.erase(effect.getAttribute());
+			cache.erase(attribute);
 		}
 		else
 		{
-			if (cache.count(effect.getAttribute()) == 0)
+			if (cache.count(attribute) == 0)
 			{
-				cache[effect.getAttribute()] = baseAttributes[effect.getAttribute()];
+				cache[attribute] = baseAttributes[attribute];
 			}
-			update(effect, cache[effect.getAttribute()]);
+			update(effect, cache[attribute]);
 		}
 	}
 	if (effects.size() + 1 > reservationSize)
