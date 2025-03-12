@@ -21,6 +21,7 @@ void LayeredAttributes_v6::SetBaseAttribute(AttributeKey attribute, int value)
 //effects.
 int LayeredAttributes_v6::GetCurrentAttribute(AttributeKey attribute) const
 {
+	// TODO: handle caching to avoid full calculation each time
 	int result = calculate(attribute);
 	return result;
 }
