@@ -4,10 +4,10 @@
 LayeredAttributes_v5::LayeredAttributes_v5(bool errorLoggingEnabled, bool errorHandlingEnabled, size_t reservationSize)
 	: errorLoggingEnabled(errorLoggingEnabled), errorHandlingEnabled(errorHandlingEnabled), reservationSize(std::max(1ULL, reservationSize))
 {
-	baseAttributes.fill(0);
-	currentAttributes.fill(0);
-	attributeDirty.fill(false);
-	highestLayers.fill(std::numeric_limits<int>::min());
+	//baseAttributes.fill(0);
+	//currentAttributes.fill(0);
+	//attributeDirty.fill(false);
+	//highestLayers.fill(std::numeric_limits<int>::min());
 }
 
 //Set the base value for an attribute on this object. All base values
@@ -15,7 +15,7 @@ LayeredAttributes_v5::LayeredAttributes_v5(bool errorLoggingEnabled, bool errorH
 //alter any existing layered effects.
 void LayeredAttributes_v5::SetBaseAttribute(AttributeKey attribute, int value)
 {
-	if (attributeInBounds(attribute))
+	//if (attributeInBounds(attribute))
 	{
 		baseAttributes[attribute] = value;
 		attributeDirty[attribute] = true;
@@ -27,16 +27,20 @@ void LayeredAttributes_v5::SetBaseAttribute(AttributeKey attribute, int value)
 //effects.
 int LayeredAttributes_v5::GetCurrentAttribute(AttributeKey attribute) const
 {
-	if (attributeInBounds(attribute) == false)
-	{
-		return std::numeric_limits<int>::min();
-	}
-	if (attributeDirty[attribute])
+	//if (attributeInBounds(attribute) == false)
+	//{
+	//	return std::numeric_limits<int>::min();
+	//}
+	//if(attributeDirty[attribute])
+	auto itDirty = attributeDirty.find(attribute);
+	if (itDirty != attributeDirty.end() && itDirty->second)
 	{
 		calculateAndCache(attribute);
 		attributeDirty[attribute] = false;
 	}
-	return currentAttributes[attribute];
+	//return currentAttributes[attribute];
+	auto itCurrent = currentAttributes.find(attribute);
+	return itCurrent != currentAttributes.end() ? itCurrent->second : std::numeric_limits<int>::min();
 }
 
 //Applies a new layered effect to this object's attributes. See
