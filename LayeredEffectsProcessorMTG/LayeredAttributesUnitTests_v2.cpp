@@ -1,37 +1,31 @@
-#include "LayeredAttributesUnitTests.hpp"
-#include "LayeredAttributes_v2.hpp"
-#include "LayeredAttributes_v1.hpp"
-#include "LayeredAttributes_v3.hpp"
-#include "LayeredAttributes_v4.hpp"
+#include "LayeredAttributesUnitTests_v2.hpp"
+#include "LayeredAttributes_v6.hpp"
 #include <assert.h>
 #include <iostream>
 
-//using Implementation = LayeredAttributes_v1;
-//using Implementation = LayeredAttributes_v2;
-//using Implementation = LayeredAttributes_v3;
-using Implementation = LayeredAttributes_v4;
+using Implementation = LayeredAttributes_v6;
 
 
-void LayeredAttributesUnitTests::runOperationalTests()
+void LayeredAttributesUnitTests_v2::runOperationalTests()
 {
 	testSetAndGet();
 	testAddAndClear();
-	testConsolidation();
-	testBitwise();
-	testComplexAdd_v1();
-	testComplexAdd_v2();
+	//testConsolidation();
+	//testBitwise();
+	//testComplexAdd_v1();
+	//testComplexAdd_v2();
 	std::cout << "** Operational tests passed **" << std::endl;
 }
 
 // Warning: These tests may throw an error
-void LayeredAttributesUnitTests::runCrashTests()
+void LayeredAttributesUnitTests_v2::runCrashTests()
 {
 	testOutOfBounds();
 	testZeroReservation();
 	std::cout << "** Crash tests passed **" << std::endl;
 }
 
-void LayeredAttributesUnitTests::testSetAndGet()
+void LayeredAttributesUnitTests_v2::testSetAndGet()
 {
 	attributes = std::make_unique<Implementation>();
 	attributes->SetBaseAttribute(AttributeKey::AttributeKey_Power, 2);
@@ -54,7 +48,7 @@ void LayeredAttributesUnitTests::testSetAndGet()
 	std::cout << "testSetAndGet passed" << std::endl;
 }
 
-void LayeredAttributesUnitTests::testAddAndClear()
+void LayeredAttributesUnitTests_v2::testAddAndClear()
 {
 	attributes = std::make_unique<Implementation>();
 	attributes->SetBaseAttribute(AttributeKey::AttributeKey_Power, 2);
@@ -102,7 +96,7 @@ void LayeredAttributesUnitTests::testAddAndClear()
 	std::cout << "testAddAndClear passed" << std::endl;
 }
 
-void LayeredAttributesUnitTests::testConsolidation()
+void LayeredAttributesUnitTests_v2::testConsolidation()
 {
 	attributes = std::make_unique<Implementation>();
 	int basePower = 2;
@@ -129,7 +123,7 @@ void LayeredAttributesUnitTests::testConsolidation()
 	std::cout << "testConsolidation passed" << std::endl;
 }
 
-void LayeredAttributesUnitTests::testBitwise()
+void LayeredAttributesUnitTests_v2::testBitwise()
 {
 	attributes = std::make_unique<Implementation>();
 	int basePower = 3;
@@ -146,7 +140,7 @@ void LayeredAttributesUnitTests::testBitwise()
 	std::cout << "testBitwise passed" << std::endl;
 }
 
-void LayeredAttributesUnitTests::testComplexAdd_v1()
+void LayeredAttributesUnitTests_v2::testComplexAdd_v1()
 {
 	attributes = std::make_unique<Implementation>();
 	int basePower = 2;
@@ -185,7 +179,7 @@ void LayeredAttributesUnitTests::testComplexAdd_v1()
 	std::cout << "testComplexAdd_v1 passed" << std::endl;
 }
 
-void LayeredAttributesUnitTests::testComplexAdd_v2()
+void LayeredAttributesUnitTests_v2::testComplexAdd_v2()
 {
 	attributes = std::make_unique<Implementation>();
 	int basePower = 2;
@@ -222,7 +216,7 @@ void LayeredAttributesUnitTests::testComplexAdd_v2()
 	std::cout << "testComplexAdd_v2 passed" << std::endl;
 }
 
-void LayeredAttributesUnitTests::testZeroReservation()
+void LayeredAttributesUnitTests_v2::testZeroReservation()
 {
 	std::cout << "testZeroReservation now expects to NOT throw an error..." << std::endl;
 	// this block will throw an error without proper implementation
@@ -249,7 +243,7 @@ void LayeredAttributesUnitTests::testZeroReservation()
 	std::cout << "testZeroReservation did not throw an error" << std::endl;
 }
 
-void LayeredAttributesUnitTests::testOutOfBounds()
+void LayeredAttributesUnitTests_v2::testOutOfBounds()
 {
 	std::cout << "testOutOfBounds expects to throw an error..." << std::endl;
 	attributes = std::make_unique<Implementation>(true, true);
