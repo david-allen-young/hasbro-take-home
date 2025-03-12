@@ -29,7 +29,30 @@ int LayeredAttributes_v6::GetCurrentAttribute(AttributeKey attribute) const
 	{
 		if (effect.getAttribute() == attribute)
 		{
-			result += effect.getModification();
+			if (effect.getOperation() == EffectOperation_Set)
+			{
+				result = effect.getModification();
+			}
+			else if(effect.getOperation() == EffectOperation_Add)
+			{
+				result += effect.getModification();
+			}
+			else if (effect.getOperation() == EffectOperation_Subtract)
+			{
+				result -= effect.getModification();
+			}
+			else if (effect.getOperation() == EffectOperation_Multiply)
+			{
+				result *= effect.getModification();
+			}
+			else if (effect.getOperation() == EffectOperation_BitwiseOr)
+			{
+				result |= effect.getModification();
+			}
+			else if (effect.getOperation() == EffectOperation_BitwiseAnd)
+			{
+				result &= effect.getModification();
+			}
 		}
 	}
 
