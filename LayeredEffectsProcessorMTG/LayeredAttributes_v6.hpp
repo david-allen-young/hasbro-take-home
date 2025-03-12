@@ -60,6 +60,7 @@ private:
 
 	mutable std::unordered_map<AttributeKey, int> cache;
 	int calculate(AttributeKey attribute) const;
+	void update(const Effect& effect, int& result) const;
 
 	//void updateCache(AttributeKey attribute, const Mod& mod) const;
 

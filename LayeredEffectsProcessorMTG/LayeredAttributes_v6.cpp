@@ -39,13 +39,27 @@ void LayeredAttributes_v6::AddLayeredEffect(LayeredEffectDefinition effectDef)
 {
 	int timestamp = getNextTimestamp();
 	auto effect = Effect(effectDef, timestamp);
+	if (!effects.empty())
+	{
+		if (effects.back().getLayer() > effect.getLayer())
+		{
+			effectsUnsorted = true;
+			cache.erase(effect.getAttribute());
+		}
+		else
+		{
+			if (cache.count(effect.getAttribute()) == 0)
+			{
+				cache[effect.getAttribute()] = baseAttributes[effect.getAttribute()];
+			}
+			update(effect, cache[effect.getAttribute()]);
+		}
+	}
 	if (effects.size() + 1 > reservationSize)
 	{
 		effects.reserve(effects.size() + reservationSize);
 	}
 	effects.push_back(effect);
-	effectsUnsorted = true;
-	cache.erase(effect.getAttribute());
 }
 
 //Removes all layered effects from this object. After this call,
@@ -83,33 +97,38 @@ int LayeredAttributes_v6::calculate(AttributeKey attribute) const
 		{
 			continue;
 		}
-		if (effect.getOperation() == EffectOperation_Set)
-		{
-			result = effect.getModification();
-		}
-		else if (effect.getOperation() == EffectOperation_Add)
-		{
-			result += effect.getModification();
-		}
-		else if (effect.getOperation() == EffectOperation_Subtract)
-		{
-			result -= effect.getModification();
-		}
-		else if (effect.getOperation() == EffectOperation_Multiply)
-		{
-			result *= effect.getModification();
-		}
-		else if (effect.getOperation() == EffectOperation_BitwiseOr)
-		{
-			result |= effect.getModification();
-		}
-		else if (effect.getOperation() == EffectOperation_BitwiseAnd)
-		{
-			result &= effect.getModification();
-		}
+		update(effect, result);
 	}
 
 	return result;
+}
+
+void LayeredAttributes_v6::update(const Effect& effect, int& result) const
+{
+	if (effect.getOperation() == EffectOperation_Set)
+	{
+		result = effect.getModification();
+	}
+	else if (effect.getOperation() == EffectOperation_Add)
+	{
+		result += effect.getModification();
+	}
+	else if (effect.getOperation() == EffectOperation_Subtract)
+	{
+		result -= effect.getModification();
+	}
+	else if (effect.getOperation() == EffectOperation_Multiply)
+	{
+		result *= effect.getModification();
+	}
+	else if (effect.getOperation() == EffectOperation_BitwiseOr)
+	{
+		result |= effect.getModification();
+	}
+	else if (effect.getOperation() == EffectOperation_BitwiseAnd)
+	{
+		result &= effect.getModification();
+	}
 }
 
 
