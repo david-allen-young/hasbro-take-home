@@ -35,6 +35,10 @@ void LayeredAttributes_v6::AddLayeredEffect(LayeredEffectDefinition effectDef)
 {
 	int timestamp = getNextTimestamp();
 	auto effect = Effect(effectDef, timestamp);
+	if (effects.size() + 1 > reservationSize)
+	{
+		effects.reserve(effects.size() + reservationSize);
+	}
 	effects.push_back(effect);
 }
 
