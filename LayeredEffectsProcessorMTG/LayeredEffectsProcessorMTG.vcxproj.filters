@@ -45,6 +45,9 @@
     <ClCompile Include="LayeredAttributes_v4.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LayeredAttributes_v5.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ILayeredAttributes.hpp">
@@ -69,6 +72,9 @@
       <Filter>Extensions</Filter>
     </ClInclude>
     <ClInclude Include="LayeredAttributes_v4.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LayeredAttributes_v5.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
