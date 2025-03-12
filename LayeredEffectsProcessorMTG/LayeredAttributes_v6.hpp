@@ -49,21 +49,17 @@ private:
 	bool errorHandlingEnabled;
 	size_t reservationSize;
 
+	size_t nextTimestamp = 0;
+	size_t getNextTimestamp() { return nextTimestamp++; }
+
 	mutable std::unordered_map<AttributeKey, int> baseAttributes;
 	mutable std::vector<Effect> effects;
 	mutable bool effectsUnsorted = true;
-
-	void logError(LayeredEffectDefinition effectDef);
-	void logError(AttributeKey attribute) const;
-
-	//bool attributeInBounds(AttributeKey attribute) const;
-
 	mutable std::unordered_map<AttributeKey, int> cache;
+
 	int calculate(AttributeKey attribute) const;
 	void update(const Effect& effect, int& result) const;
 
-	//void updateCache(AttributeKey attribute, const Mod& mod) const;
-
-	size_t nextTimestamp = 0;
-	size_t getNextTimestamp() { return nextTimestamp++; }
+	void logError(LayeredEffectDefinition effectDef);
+	void logError(AttributeKey attribute) const;
 };
