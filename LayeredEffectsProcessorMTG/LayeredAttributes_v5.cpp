@@ -1,6 +1,8 @@
 #include "LayeredAttributes_v5.hpp"
 #include <stdexcept>
 
+/*NB: Do not use this implementation. Aborting in favor a new apprach. See v6...*/
+
 LayeredAttributes_v5::LayeredAttributes_v5(bool errorLoggingEnabled, bool errorHandlingEnabled, size_t reservationSize)
 	: errorLoggingEnabled(errorLoggingEnabled), errorHandlingEnabled(errorHandlingEnabled), reservationSize(std::max(1ULL, reservationSize))
 {

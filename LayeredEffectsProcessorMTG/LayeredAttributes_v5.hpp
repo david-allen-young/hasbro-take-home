@@ -5,6 +5,7 @@
 //#include <array>
 #include <unordered_map>
 
+/*NB: Do not use this implementation. Aborting in favor a new apprach. See v6...*/
 class LayeredAttributes_v5 : public ILayeredAttributes
 {
 public:
