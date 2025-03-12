@@ -14,6 +14,7 @@ LayeredAttributes_v6::LayeredAttributes_v6(bool errorLoggingEnabled, bool errorH
 void LayeredAttributes_v6::SetBaseAttribute(AttributeKey attribute, int value)
 {
 	baseAttributes[attribute] = value;
+	cache.erase(attribute);
 }
 
 //Return the current value for an attribute on this object. Will
@@ -21,9 +22,12 @@ void LayeredAttributes_v6::SetBaseAttribute(AttributeKey attribute, int value)
 //effects.
 int LayeredAttributes_v6::GetCurrentAttribute(AttributeKey attribute) const
 {
-	// TODO: handle caching to avoid full calculation each time
-	int result = calculate(attribute);
-	return result;
+	if (cache.count(attribute) == 0)
+	{
+		int result = calculate(attribute);
+		cache[attribute] = result;
+	}
+	return cache[attribute];
 }
 
 //Applies a new layered effect to this object's attributes. See
@@ -40,6 +44,7 @@ void LayeredAttributes_v6::AddLayeredEffect(LayeredEffectDefinition effectDef)
 		effects.reserve(effects.size() + reservationSize);
 	}
 	effects.push_back(effect);
+	cache.erase(effect.getAttribute());
 }
 
 //Removes all layered effects from this object. After this call,
@@ -47,6 +52,7 @@ void LayeredAttributes_v6::AddLayeredEffect(LayeredEffectDefinition effectDef)
 void LayeredAttributes_v6::ClearLayeredEffects()
 {
 	effects.clear();
+	cache.clear();
 }
 
 void LayeredAttributes_v6::logError([[maybe_unused]] LayeredEffectDefinition effect)
