@@ -3,13 +3,15 @@
 #include "LayeredAttributes_v1.hpp"
 #include "LayeredAttributes_v3.hpp"
 #include "LayeredAttributes_v4.hpp"
+#include "LayeredAttributes_v5.hpp"
 #include <assert.h>
 #include <iostream>
 
 //using Implementation = LayeredAttributes_v1;
 //using Implementation = LayeredAttributes_v2;
 //using Implementation = LayeredAttributes_v3;
-using Implementation = LayeredAttributes_v4;
+//using Implementation = LayeredAttributes_v4;
+using Implementation = LayeredAttributes_v5;
 
 
 void LayeredAttributesUnitTests::runOperationalTests()
