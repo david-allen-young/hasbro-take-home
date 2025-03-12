@@ -1,9 +1,38 @@
 #pragma once
 #include "ILayeredAttributes.hpp"
 #include <vector>
-#include <map>
-//#include <array>
 #include <unordered_map>
+
+class Effect
+{
+public:
+	Effect(LayeredEffectDefinition effectDef, int timestamp)
+	{
+		std::swap(effectDef, this->effectDef);
+		std::swap(timestamp, this->timestamp);
+	}
+	int getAttribute() const { return effectDef.Attribute; }
+	int getOperation() const { return effectDef.Operation; }
+	int getModification() const { return effectDef.Modification; }
+	int getLayer() const { return effectDef.Layer; }
+	int getTimestamp() const { return timestamp; }
+
+private:
+	LayeredEffectDefinition effectDef;
+	int timestamp;
+};
+
+struct EffectComparator
+{
+	bool operator()(const Effect& a, const Effect& b) const
+	{
+		if (a.getLayer() != b.getLayer())
+		{
+			return a.getLayer() < b.getLayer();
+		}
+		return a.getTimestamp() < b.getTimestamp();
+	}
+};
 
 class LayeredAttributes_v6 : public ILayeredAttributes
 {
@@ -20,20 +49,16 @@ private:
 	bool errorHandlingEnabled;
 	size_t reservationSize;
 
-	mutable std::vector<std::tuple</*layer*/int, /*timestamp*/int, /*attribute*/int, /*modifier*/int>> effects;
+	mutable std::unordered_map<AttributeKey, int> baseAttributes;
+	mutable std::vector<Effect> effects;
 
-	//struct Mod
-	//{
-	//	EffectOperation operation;
-	//	int modifier;
-	//};
-	//using LayerModsMap = std::map</*layer*/int, std::vector<Mod>>;
-	//mutable std::unordered_map<AttributeKey, std::pair<LayerModsMap, /*modifier*/int>> attributeModifiers;
-	//mutable std::unordered_map<AttributeKey, /*dirty*/bool> attributeDirty;
-
-	void logError(LayeredEffectDefinition effect);
+	void logError(LayeredEffectDefinition effectDef);
 	void logError(AttributeKey attribute) const;
+
 	//bool attributeInBounds(AttributeKey attribute) const;
 	//void calculateAndCache(AttributeKey attribute) const;
 	//void updateCache(AttributeKey attribute, const Mod& mod) const;
+
+	size_t nextTimestamp = 0;
+	size_t getNextTimestamp() { return nextTimestamp++; }
 };

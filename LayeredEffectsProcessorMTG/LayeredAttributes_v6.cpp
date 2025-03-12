@@ -1,5 +1,6 @@
 #include "LayeredAttributes_v6.hpp"
 #include <stdexcept>
+#include <algorithm>
 
 LayeredAttributes_v6::LayeredAttributes_v6(bool errorLoggingEnabled, bool errorHandlingEnabled, size_t reservationSize)
 	: errorLoggingEnabled(errorLoggingEnabled), errorHandlingEnabled(errorHandlingEnabled), reservationSize(std::max(1ULL, reservationSize))
@@ -12,7 +13,7 @@ LayeredAttributes_v6::LayeredAttributes_v6(bool errorLoggingEnabled, bool errorH
 //alter any existing layered effects.
 void LayeredAttributes_v6::SetBaseAttribute(AttributeKey attribute, int value)
 {
-
+	baseAttributes[attribute] = value;
 }
 
 //Return the current value for an attribute on this object. Will
@@ -20,7 +21,19 @@ void LayeredAttributes_v6::SetBaseAttribute(AttributeKey attribute, int value)
 //effects.
 int LayeredAttributes_v6::GetCurrentAttribute(AttributeKey attribute) const
 {
-	return 0;
+	// the map defaults to zero if no key is present
+	int result = baseAttributes[attribute];
+
+	std::sort(effects.begin(), effects.end(), EffectComparator());
+	for (auto& effect : effects)
+	{
+		if (effect.getAttribute() == attribute)
+		{
+			result += effect.getModification();
+		}
+	}
+
+	return result;
 }
 
 //Applies a new layered effect to this object's attributes. See
@@ -28,16 +41,18 @@ int LayeredAttributes_v6::GetCurrentAttribute(AttributeKey attribute) const
 //applied. Note that any number of layered effects may be applied
 //at any given time. Also note that layered effects are not necessarily
 //applied in the same order they were added. (see LayeredEffectDefinition.Layer)
-void LayeredAttributes_v6::AddLayeredEffect(LayeredEffectDefinition effect)
+void LayeredAttributes_v6::AddLayeredEffect(LayeredEffectDefinition effectDef)
 {
-
+	int timestamp = getNextTimestamp();
+	auto effect = Effect(effectDef, timestamp);
+	effects.push_back(effect);
 }
 
 //Removes all layered effects from this object. After this call,
 //all current attributes will be equal to the base attributes.
 void LayeredAttributes_v6::ClearLayeredEffects()
 {
-
+	effects.clear();
 }
 
 void LayeredAttributes_v6::logError([[maybe_unused]] LayeredEffectDefinition effect)
@@ -50,17 +65,4 @@ void LayeredAttributes_v6::logError([[maybe_unused]] AttributeKey attribute) con
 	// Imagine that this method writes something useful to glog or similar logging service
 }
 
-//bool LayeredAttributes_v6::attributeInBounds([[maybe_unused]]AttributeKey attribute) const
-//{
-//	return false;
-//}
-//
-//void LayeredAttributes_v6::calculateAndCache(AttributeKey attribute) const
-//{
-//
-//}
-//
-//void LayeredAttributes_v6::updateCache(AttributeKey attribute, const Mod& mod) const
-//{
-//
-//}
+
