@@ -5,7 +5,9 @@
 LayeredAttributes_v6::LayeredAttributes_v6(bool errorLoggingEnabled, size_t reservationSize)
 	: errorLoggingEnabled(errorLoggingEnabled), reservationSize(std::max(1ULL, reservationSize))
 {
-
+	baseAttributes.reserve(reservationSize);
+	cache.reserve(reservationSize);
+	effects.reserve(reservationSize);
 }
 
 //Set the base value for an attribute on this object. All base values
