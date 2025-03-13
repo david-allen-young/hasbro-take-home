@@ -1,8 +1,8 @@
-#include "LayeredAttributes_v6.hpp"
+#include "LayeredAttributes_v7.hpp"
 #include <stdexcept>
 #include <algorithm>
 
-LayeredAttributes_v6::LayeredAttributes_v6(bool errorLoggingEnabled, size_t reservationSize)
+LayeredAttributes_v7::LayeredAttributes_v7(bool errorLoggingEnabled, size_t reservationSize)
 	: errorLoggingEnabled(errorLoggingEnabled), reservationSize(std::max(1ULL, reservationSize))
 {
 	baseAttributes.reserve(reservationSize);
@@ -13,7 +13,7 @@ LayeredAttributes_v6::LayeredAttributes_v6(bool errorLoggingEnabled, size_t rese
 //Set the base value for an attribute on this object. All base values
 //default to 0 until set. Note that resetting a base attribute does not
 //alter any existing layered effects.
-void LayeredAttributes_v6::SetBaseAttribute(AttributeKey attribute, int value)
+void LayeredAttributes_v7::SetBaseAttribute(AttributeKey attribute, int value)
 {
 	if (errorLoggingEnabled && !isValidAttributeKey(attribute))
 	{
@@ -26,7 +26,7 @@ void LayeredAttributes_v6::SetBaseAttribute(AttributeKey attribute, int value)
 //Return the current value for an attribute on this object. Will
 //be equal to the base value, modified by any applicable layered
 //effects.
-int LayeredAttributes_v6::GetCurrentAttribute(AttributeKey attribute) const
+int LayeredAttributes_v7::GetCurrentAttribute(AttributeKey attribute) const
 {
 	if (errorLoggingEnabled && !isValidAttributeKey(attribute))
 	{
@@ -45,7 +45,7 @@ int LayeredAttributes_v6::GetCurrentAttribute(AttributeKey attribute) const
 //applied. Note that any number of layered effects may be applied
 //at any given time. Also note that layered effects are not necessarily
 //applied in the same order they were added. (see LayeredEffectDefinition.Layer)
-void LayeredAttributes_v6::AddLayeredEffect(LayeredEffectDefinition effectDef)
+void LayeredAttributes_v7::AddLayeredEffect(LayeredEffectDefinition effectDef)
 {
 	if (errorLoggingEnabled && !isValidAttributeKey(effectDef.Attribute))
 	{
@@ -60,13 +60,13 @@ void LayeredAttributes_v6::AddLayeredEffect(LayeredEffectDefinition effectDef)
 
 //Removes all layered effects from this object. After this call,
 //all current attributes will be equal to the base attributes.
-void LayeredAttributes_v6::ClearLayeredEffects()
+void LayeredAttributes_v7::ClearLayeredEffects()
 {
 	effects = {};
 	cache = {};
 }
 
-bool LayeredAttributes_v6::isValidAttributeKey(AttributeKey attribute) const
+bool LayeredAttributes_v7::isValidAttributeKey(AttributeKey attribute) const
 {
 	// as defined in ILayeredAttributes.hpp
 	// at the time of this implementation
@@ -92,12 +92,12 @@ bool LayeredAttributes_v6::isValidAttributeKey(AttributeKey attribute) const
 	return false;
 }
 
-void LayeredAttributes_v6::logError([[maybe_unused]] AttributeKey attribute) const
+void LayeredAttributes_v7::logError([[maybe_unused]] AttributeKey attribute) const
 {
 	// Imagine that this method writes something useful to glog or similar logging service
 }
 
-int LayeredAttributes_v6::calculateAttribute(AttributeKey attribute) const
+int LayeredAttributes_v7::calculateAttribute(AttributeKey attribute) const
 {
 	// the map defaults to zero if no key is present
 	int result = baseAttributes[attribute];
@@ -120,7 +120,7 @@ int LayeredAttributes_v6::calculateAttribute(AttributeKey attribute) const
 	return result;
 }
 
-void LayeredAttributes_v6::updateAttribute(const Effect& effect, int& result) const
+void LayeredAttributes_v7::updateAttribute(const Effect& effect, int& result) const
 {
 	if (effect.getOperation() == EffectOperation_Set)
 	{
@@ -148,7 +148,7 @@ void LayeredAttributes_v6::updateAttribute(const Effect& effect, int& result) co
 	}
 }
 
-void LayeredAttributes_v6::updateLayerValidation(const Effect& effect)
+void LayeredAttributes_v7::updateLayerValidation(const Effect& effect)
 {
 	if (!effectsUnsorted && !effects.empty() && effects.back().getLayer() > effect.getLayer())
 	{
@@ -159,7 +159,7 @@ void LayeredAttributes_v6::updateLayerValidation(const Effect& effect)
 	}
 }
 
-void LayeredAttributes_v6::updateCachedAttribute(const Effect& effect)
+void LayeredAttributes_v7::updateCachedAttribute(const Effect& effect)
 {
 	AttributeKey attribute = effect.getAttribute();
 	if (effectsUnsorted)
@@ -176,7 +176,7 @@ void LayeredAttributes_v6::updateCachedAttribute(const Effect& effect)
 	}
 }
 
-void LayeredAttributes_v6::updateEffectsStorage(const Effect& effect)
+void LayeredAttributes_v7::updateEffectsStorage(const Effect& effect)
 {
 	if (effects.size() + 1 > reservationSize)
 	{
@@ -188,7 +188,7 @@ void LayeredAttributes_v6::updateEffectsStorage(const Effect& effect)
 	}
 }
 
-bool LayeredAttributes_v6::flattenOperations(const Effect& effect)
+bool LayeredAttributes_v7::flattenOperations(const Effect& effect)
 {
 	bool flattened = false;
 	if (!effects.empty())
