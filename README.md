@@ -37,7 +37,7 @@ This repository contains an implementation of a <b>Layered Effects Processor</b>
 <pre>
 cpp <br>
   
-LayeredAttributes_v2 attributes(true, 10); <br>
+LayeredAttributes_v2 attributes; <br>
 
 // Set base attribute <br>
 attributes.SetBaseAttribute(AttributeKey_Power, 5); <br>
