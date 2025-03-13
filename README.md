@@ -87,7 +87,33 @@ This repository contains an implementation of a Layered Effects Processor, desig
  
       
 * **Efficient Attribute Retrieval**
+   ```cpp
+   int LayeredAttributes_v2::GetCurrentAttribute(AttributeKey attribute) const
+   {
+   	if (errorLoggingEnabled && !isValidAttributeKey(attribute))
+   	{
+   		logError(attribute);
+   	}
+   	auto it = cache.find(attribute);
+   	if (it == cache.end())
+   	{
+   		it = cache.insert({ attribute, calculateAttribute(attribute) }).first;
+   	}
+   	else if (attributeDirty[attribute])
+   	{
+   		it->second = calculateAttribute(attribute);
+   		attributeDirty[attribute] = false;
+   	}
+   	else
+   	{
+   		// do nothing
+   	}
+   	return it->second;
+   }
+   ```
     * The system caches computed values for quick access using GetCurrentAttribute(AttributeKey), reducing redundant recalculations.
+ 
+      
 * **Clearing Effects**
     * Reset all layered effects using ClearLayeredEffects(), reverting attributes to their base values.
 
