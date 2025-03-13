@@ -30,12 +30,12 @@ int LayeredAttributes_v6::GetCurrentAttribute(AttributeKey attribute) const
 	{
 		logError(attribute);
 	}
-	if (cache.count(attribute) == 0)
+	auto it = cache.find(attribute);
+	if (it == cache.end())
 	{
-		int result = calculateAttribute(attribute);
-		cache[attribute] = result;
+		it = cache.insert({ attribute, calculateAttribute(attribute) }).first;
 	}
-	return cache[attribute];
+	return it->second;
 }
 
 //Applies a new layered effect to this object's attributes. See
