@@ -30,12 +30,12 @@ This repository contains an implementation of a Layered Effects Processor, desig
 	mutable std::unordered_map<AttributeKey, bool> attributeDirty;
 	mutable std::unordered_map<AttributeKey, int> cache;
     ```
-    * LayeredAttributes_v2::baseAttributes stores the base attributes as they arrive (refer to **SetBaseAttribute()** method.)
-    * LayeredAttributes_v2::effects stores the layered effects as they arrive (refer to **AddLayeredEffect()** method.)
-    * LayeredAttributes_v2::attributeDirty tracks the validity of the cached (current) attribute value.
-    * LayeredAttributes_v2::cache stores the cached result of applying the **std::vector<Effect>** to a given attribute.
+    * LayeredAttributes_v2::**baseAttributes** stores the base attributes as they arrive (refer to **SetBaseAttribute()** method.)
+    * LayeredAttributes_v2::**effects** stores the layered effects as they arrive (refer to **AddLayeredEffect()** method.)
+    * LayeredAttributes_v2::**attributeDirty** tracks the validity of the cached (current) attribute value.
+    * LayeredAttributes_v2::**cache** stores the cached result of applying the **std::vector<Effect>** to a given attribute.
     * Each container is preceded by the **mutable** keyword to allow for lazy evaluation during calls to **GetCurrentAttribute()** from the client.
-    * This is necessary because the pure **virtual** method ILayeredAttributes::GetCurrentAttribute() is specified as **const** in the interface file.
+    * This is necessary because the pure **virtual** method **ILayeredAttributes::GetCurrentAttribute()** is specified as **const** in the interface file.
  
 * **Custom Comparator**
     ```cpp
@@ -51,7 +51,7 @@ This repository contains an implementation of a Layered Effects Processor, desig
 		}
 	};
     ```
-    * LayeredAttributes_v2::EffectComparator is used to keep the effects container sorted by **{layer, timestamp}** during insertions.  
+    * LayeredAttributes_v2::**EffectComparator** is used to keep the effects container sorted by **{layer, timestamp}** during insertions.  
 
 * **Initialization**
    ```cpp
