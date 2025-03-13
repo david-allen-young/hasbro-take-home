@@ -24,7 +24,6 @@ This repository contains an implementation of a Layered Effects Processor, desig
 
 
 * **Initialization**
-    * The constructor allows for optional error logging and pre-allocates memory according to a configurable reservation block size.
    ```cpp
    LayeredAttributes_v2::LayeredAttributes_v2(bool errorLoggingEnabled, size_t reservationSize)
    	: errorLoggingEnabled(errorLoggingEnabled), reservationSize(std::max(1ULL, reservationSize))
@@ -33,12 +32,9 @@ This repository contains an implementation of a Layered Effects Processor, desig
    	cache.reserve(reservationSize);
    }
    ```
+   * The constructor allows for optional error logging and pre-allocates memory according to a configurable reservation block size.
       
 * **Setting Base Attributes**
-    * Attributes start at a default value (0) and can be explicitly set using SetBaseAttribute(AttributeKey, int).
-       * If error logging is enabled and the AttributeKey fails validation, write an error to the log.
-       * Set baseAttributes[attribute] to the given value.
-       * Update attributeDirty[attribute] to indicate that this attribute's cached value is no longer valid.
    ```cpp
    void LayeredAttributes_v2::SetBaseAttribute(AttributeKey attribute, int value)
    {
@@ -50,6 +46,10 @@ This repository contains an implementation of a Layered Effects Processor, desig
       attributeDirty[attribute] = true;
    }
    ```
+   * Attributes start at a default value (0) and can be explicitly set using SetBaseAttribute(AttributeKey, int).
+   * If error logging is enabled and the AttributeKey fails validation, write an error to the log.
+   * Set baseAttributes[attribute] to the given value.
+   * Update attributeDirty[attribute] to indicate that this attribute's cached value is no longer valid.
       
 * **Applying Layered Effects**
     * Effects are applied through AddLayeredEffect(LayeredEffectDefinition), modifying base attributes according to their operation type (e.g., add, multiply, set).
