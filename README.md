@@ -120,7 +120,15 @@ This repository contains an implementation of a Layered Effects Processor, desig
  
       
 * **Clearing Effects**
-    * Reset all layered effects using ClearLayeredEffects(), reverting attributes to their base values.
+   ```cpp
+   void LayeredAttributes_v2::ClearLayeredEffects()
+   {
+   	effects = {};
+   	cache = {};
+   	attributeDirty = {};
+   }
+   ```
+   * Reset all layered effects using ClearLayeredEffects(), reverting attributes to their base values.
 
 
 #### 
