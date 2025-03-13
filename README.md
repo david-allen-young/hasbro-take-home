@@ -52,7 +52,40 @@ This repository contains an implementation of a Layered Effects Processor, desig
    * Update attributeDirty[attribute] to indicate that this attribute's cached value is no longer valid.
       
 * **Applying Layered Effects**
+   ```cpp
+   void LayeredAttributes_v2::AddLayeredEffect(LayeredEffectDefinition effectDef)
+   {
+   	if (errorLoggingEnabled && !isValidAttributeKey(effectDef.Attribute))
+   	{
+   		logError(effectDef.Attribute);
+   	}
+   	size_t timestamp = getNextTimestamp();
+   	auto effect = Effect(effectDef, timestamp);
+   	AttributeKey attribute = effect.getAttribute();
+   	if (updateIncrementally(effect))
+   	{
+   		updateAttribute(effect, cache[attribute]);
+   	}
+   	else
+   	{
+   		if (effects[attribute].size() + 1 > reservationSize)
+   		{
+   			effects[attribute].reserve(effects.size() + reservationSize);
+   		}
+   		auto it = std::lower_bound(effects[attribute].begin(), effects[attribute].end(), effect, EffectComparator());
+   		effects[attribute].insert(it, effect);
+   		attributeDirty[attribute] = true;
+   	}
+   }
+   ```
     * Effects are applied through AddLayeredEffect(LayeredEffectDefinition), modifying base attributes according to their operation type (e.g., add, multiply, set).
+    * If error logging is enabled and the AttributeKey fails validation, write an error to the log.
+    * Generate a unique timestamp for this effect.
+    * Attempt to update the cache while avoiding a full recalculation.
+    * If the incremental update cannot proceed, insert this effect in priority order {layer, timestamp} using the custom comparator.
+    * Mark the attribute dirty so that it will be recalculated upon retrieval.
+ 
+      
 * **Efficient Attribute Retrieval**
     * The system caches computed values for quick access using GetCurrentAttribute(AttributeKey), reducing redundant recalculations.
 * **Clearing Effects**
