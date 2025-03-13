@@ -4,10 +4,12 @@
 This repository contains an implementation of a Layered Attributes System, designed to dynamically modify and manage game entity attributes through a structured layering system. The system allows for efficient calculation of final attribute values by applying various effects such as addition, subtraction, multiplication, and bitwise operations.
 
 ### Features
-Base Attribute Management: Set and retrieve base attribute values for an entity.
-Layered Effects Application: Apply multiple effects to attributes, which can be modified incrementally or in bulk.
-Incremental Updates: Optimize performance by reducing redundant calculations when modifying existing effects.
-Error Logging (Optional): Validate attribute modifications and log issues when necessary.
+<ul>
+<li>Base Attribute Management: Set and retrieve base attribute values for an entity.</li>
+<li>Layered Effects Application: Apply multiple effects to attributes, which can be modified incrementally or in bulk.</li>
+<li>Incremental Updates: Optimize performance by reducing redundant calculations when modifying existing effects.</li>
+<li>Error Logging (Optional): Validate attribute modifications and log issues when necessary.</li>
+</ul>
 
 ### How It Works
 
