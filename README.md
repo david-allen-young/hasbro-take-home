@@ -23,7 +23,17 @@ This repository contains an implementation of a Layered Effects Processor, desig
 ### **How It Works**
 
 
-
+* **Initialization**
+    * The constructor allows for optional error logging and pre-allocates memory according to a configurable reservation block size
+   ```cpp
+   LayeredAttributes_v2::LayeredAttributes_v2(bool errorLoggingEnabled, size_t reservationSize)
+   	: errorLoggingEnabled(errorLoggingEnabled), reservationSize(std::max(1ULL, reservationSize))
+   {
+   	baseAttributes.reserve(reservationSize);
+   	cache.reserve(reservationSize);
+   }
+   ```
+      
 * **Setting Base Attributes**
     * Attributes start at a default value (0) and can be explicitly set using SetBaseAttribute(AttributeKey, int).
 * **Applying Layered Effects**
