@@ -129,7 +129,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="LayeredAttributesUnitTests.cpp" />
     <ClCompile Include="LayeredAttributesUnitTests_v2.cpp" />
     <ClCompile Include="LayeredAttributes_v4.cpp" />
     <ClCompile Include="LayeredAttributes_v7.cpp" />
@@ -138,7 +137,6 @@
   <ItemGroup>
     <ClInclude Include="ILayeredAttributes.hpp" />
     <ClInclude Include="LayeredAttributesUnitTests_v2.hpp" />
-    <ClInclude Include="LayeredAttributesUnitTests.hpp" />
     <ClInclude Include="LayeredAttributes_v4.hpp" />
     <ClInclude Include="LayeredAttributes_v7.hpp" />
   </ItemGroup>
