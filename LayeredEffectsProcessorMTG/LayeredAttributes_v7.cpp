@@ -61,7 +61,7 @@ void LayeredAttributes_v7::AddLayeredEffect(LayeredEffectDefinition effectDef)
 	}
 	size_t timestamp = getNextTimestamp();
 	auto effect = Effect(effectDef, timestamp);
-	updateLayerValidation(effect);
+	//updateLayerValidation(effect);
 	updateCachedAttribute(effect);
 	updateEffectsStorage(effect);
 }
@@ -161,18 +161,20 @@ void LayeredAttributes_v7::updateLayerValidation(const Effect& effect)
 void LayeredAttributes_v7::updateCachedAttribute(const Effect& effect)
 {
 	AttributeKey attribute = effect.getAttribute();
-	if (attributeDirty[attribute])
-	{
-		cache.erase(attribute);
-	}
-	else
-	{
-		if (cache.count(attribute) == 0)
-		{
-			cache[attribute] = calculateAttribute(attribute);
-		}
-		updateAttribute(effect, cache[attribute]);
-	}
+	//if (attributeDirty[attribute])
+	//{
+	//	cache.erase(attribute);
+	//}
+	//else
+	//{
+	//	if (cache.count(attribute) == 0)
+	//	{
+	//		cache[attribute] = calculateAttribute(attribute);
+	//	}
+	//	updateAttribute(effect, cache[attribute]);
+	//}
+	updateAttribute(effect, cache[attribute]);
+	attributeDirty[attribute] = true;
 }
 
 void LayeredAttributes_v7::updateEffectsStorage(const Effect& effect)
