@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 
+
 class Effect
 {
 public:
@@ -11,6 +12,8 @@ public:
 		std::swap(effectDef, this->effectDef);
 		std::swap(timestamp, this->timestamp);
 	}
+	void nullify() { effectDef.Operation = EffectOperation_Invalid; }
+	void updateModification(int modification) { effectDef.Modification = modification; }
 	AttributeKey getAttribute() const { return effectDef.Attribute; }
 	int getOperation() const { return effectDef.Operation; }
 	int getModification() const { return effectDef.Modification; }
@@ -57,8 +60,14 @@ private:
 	mutable bool effectsUnsorted = true;
 	mutable std::unordered_map<AttributeKey, int> cache;
 
-	int calculate(AttributeKey attribute) const;
-	void update(const Effect& effect, int& result) const;
+	int calculateAttribute(AttributeKey attribute) const;
+	void updateAttribute(const Effect& effect, int& result) const;
+
+	void updateLayerValidation(const Effect& effect);
+	void updateCachedAttribute(const Effect& effect);
+	void updateEffectsStorage(const Effect& effect);
+
+	bool flattenOperations(const Effect& effect);
 
 	void logError(LayeredEffectDefinition effectDef);
 	void logError(AttributeKey attribute) const;

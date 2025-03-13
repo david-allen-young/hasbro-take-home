@@ -24,7 +24,7 @@ int LayeredAttributes_v6::GetCurrentAttribute(AttributeKey attribute) const
 {
 	if (cache.count(attribute) == 0)
 	{
-		int result = calculate(attribute);
+		int result = calculateAttribute(attribute);
 		cache[attribute] = result;
 	}
 	return cache[attribute];
@@ -39,28 +39,9 @@ void LayeredAttributes_v6::AddLayeredEffect(LayeredEffectDefinition effectDef)
 {
 	int timestamp = getNextTimestamp();
 	auto effect = Effect(effectDef, timestamp);
-	if (!effects.empty() && effects.back().getLayer() > effect.getLayer())
-	{
-		effectsUnsorted = true;
-	}
-	AttributeKey attribute = effect.getAttribute();
-	if (effectsUnsorted)
-	{
-		cache.erase(attribute);
-	}
-	else
-	{
-		if (cache.count(attribute) == 0)
-		{
-			cache[attribute] = calculate(attribute);
-		}
-		update(effect, cache[attribute]);
-	}
-	if (effects.size() + 1 > reservationSize)
-	{
-		effects.reserve(effects.size() + reservationSize);
-	}
-	effects.push_back(effect);
+	updateLayerValidation(effect);
+	updateCachedAttribute(effect);
+	updateEffectsStorage(effect);
 }
 
 //Removes all layered effects from this object. After this call,
@@ -81,7 +62,7 @@ void LayeredAttributes_v6::logError([[maybe_unused]] AttributeKey attribute) con
 	// Imagine that this method writes something useful to glog or similar logging service
 }
 
-int LayeredAttributes_v6::calculate(AttributeKey attribute) const
+int LayeredAttributes_v6::calculateAttribute(AttributeKey attribute) const
 {
 	// the map defaults to zero if no key is present
 	int result = baseAttributes[attribute];
@@ -98,14 +79,13 @@ int LayeredAttributes_v6::calculate(AttributeKey attribute) const
 		{
 			continue;
 		}
-		update(effect, result);
-		// TODO: remove or flatten effects that have been calculated
+		updateAttribute(effect, result);
 	}
 
 	return result;
 }
 
-void LayeredAttributes_v6::update(const Effect& effect, int& result) const
+void LayeredAttributes_v6::updateAttribute(const Effect& effect, int& result) const
 {
 	if (effect.getOperation() == EffectOperation_Set)
 	{
@@ -131,6 +111,89 @@ void LayeredAttributes_v6::update(const Effect& effect, int& result) const
 	{
 		result &= effect.getModification();
 	}
+}
+
+void LayeredAttributes_v6::updateLayerValidation(const Effect& effect)
+{
+	if (!effectsUnsorted && !effects.empty() && effects.back().getLayer() > effect.getLayer())
+	{
+		// timestamps should be sorted already but
+		// in this case an effect with a lower layer
+		// arrived out of order and therefore we must sort
+		effectsUnsorted = true;
+	}
+}
+
+void LayeredAttributes_v6::updateCachedAttribute(const Effect& effect)
+{
+	AttributeKey attribute = effect.getAttribute();
+	if (effectsUnsorted)
+	{
+		cache.erase(attribute);
+	}
+	else
+	{
+		if (cache.count(attribute) == 0)
+		{
+			cache[attribute] = calculateAttribute(attribute);
+		}
+		updateAttribute(effect, cache[attribute]);
+	}
+}
+
+void LayeredAttributes_v6::updateEffectsStorage(const Effect& effect)
+{
+	if (effects.size() + 1 > reservationSize)
+	{
+		effects.reserve(effects.size() + reservationSize);
+	}
+	if (!flattenOperations(effect))
+	{
+		effects.push_back(effect);
+	}
+}
+
+bool LayeredAttributes_v6::flattenOperations(const Effect& effect)
+{
+	bool flattened = false;
+	if (!effects.empty())
+	{
+		auto& oldEffect = effects.back();
+		bool isSameLayer = (oldEffect.getLayer() == effect.getLayer());
+		bool isSameAttribute = (oldEffect.getAttribute() == effect.getAttribute());
+		bool isSameOperation = (oldEffect.getOperation() == effect.getOperation());
+		if (isSameLayer && isSameAttribute && isSameOperation)
+		{
+			auto operation = oldEffect.getOperation();
+			int updatedModification = oldEffect.getModification();
+			if (operation == EffectOperation_Set)
+			{
+				updatedModification = effect.getModification();
+			}
+			else if (operation == EffectOperation_Add || operation == EffectOperation_Subtract)
+			{
+				updatedModification += effect.getModification();
+			}
+			else if (operation == EffectOperation_Multiply)
+			{
+				updatedModification *= effect.getModification();
+			}
+			else if (operation == EffectOperation_BitwiseOr)
+			{
+				updatedModification |= effect.getModification();
+			}
+			else if (operation == EffectOperation_BitwiseAnd)
+			{
+				updatedModification &= effect.getModification();
+			}
+			else
+			{
+			}
+			oldEffect.updateModification(updatedModification);
+			flattened = true;
+		}
+	}
+	return flattened;
 }
 
 
