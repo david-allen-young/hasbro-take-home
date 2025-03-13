@@ -1,80 +1,76 @@
-# Layered Effects Processor
+# **Layered Effects Processor**
 
-### Overview
-This repository contains an implementation of a <b>Layered Effects Processor</b>, designed to dynamically modify and manage game entity attributes through a structured layering system. The system allows for efficient calculation of final attribute values by applying various effects such as addition, subtraction, multiplication, and bitwise operations.
 
-### Features
-<ul>
-<li><b>Base Attribute Management:</b> Set and retrieve base attribute values for an entity.</li>
-<li><b>Layered Effects Application:</b> Apply multiple effects to attributes, which can be modified incrementally or in bulk.</li>
-<li><b>Incremental Updates:</b> Optimize performance by reducing redundant calculations when modifying existing effects.</li>
-<li><b>Error Logging (Optional):</b> Validate attribute modifications and log issues when necessary.</li>
-</ul>
+### **Overview**
 
-### How It Works
+This repository contains an implementation of a Layered Effects Processor, designed to dynamically modify and manage game entity attributes through a structured layering system. The system allows for efficient calculation of final attribute values by applying various effects such as addition, subtraction, multiplication, and bitwise operations.
 
-<blockquote>
-<b>Setting Base Attributes</b>
-<ul><li>Attributes start at a default value (0) and can be explicitly set using SetBaseAttribute(AttributeKey, int).</li></ul>
-</blockquote>
 
-<blockquote>
-<b>Applying Layered Effects</b>
-<ul><li>Effects are applied through AddLayeredEffect(LayeredEffectDefinition), modifying base attributes according to their operation type (e.g., add, multiply, set).</li></ul>
-</blockquote>
+### **Features**
 
-<blockquote>
-<b>Efficient Attribute Retrieval</b>
-<ul><li>The system caches computed values for quick access using GetCurrentAttribute(AttributeKey), reducing redundant recalculations.</li></ul>
-</blockquote>
 
-<blockquote>
-<b>Clearing Effects</b>
-<ul><li>Reset all layered effects using ClearLayeredEffects(), reverting attributes to their base values.</li></ul>
-</blockquote>
 
-#### Example Usage
-<pre>
-cpp <br>
-  
-LayeredAttributes_v2 attributes; <br>
+* **Base Attribute Management**
+    * Set and retrieve base attribute values for an entity.
+* **Layered Effects Application**
+    * Apply multiple effects to attributes, which can be modified incrementally or in bulk.
+* **Incremental Updates**
+    * Optimize performance by reducing redundant calculations when modifying existing effects.
+* **Error Logging (Optional)	**
+    * Validate attribute modifications and log issues when necessary.
 
-// Set base attribute <br>
-attributes.SetBaseAttribute(AttributeKey_Power, 5); <br>
 
-// Apply a layered effect (e.g., +3 Power) <br>
-LayeredEffectDefinition effectDef; <br>
-effectDef.Attribute = AttributeKey_Power; <br>
-effectDef.Operation = EffectOperation_Add; <br>
-effectDef.Modification = 3; <br>
-attributes.AddLayeredEffect(effectDef); <br>
+### **How It Works**
 
-// Retrieve final computed value <br>
-int power = attributes.GetCurrentAttribute(AttributeKey_Power); // Expected: 8 <br>
-</pre>
 
-### Installation & Integration
 
-<blockquote>
-<b>Include the Header and Source Files</b>
-<ul><li>Ensure LayeredAttributes_v2.hpp and LayeredAttributes_v2.cpp are added to your project.</li></ul>
-</blockquote>
+* **Setting Base Attributes**
+    * Attributes start at a default value (0) and can be explicitly set using SetBaseAttribute(AttributeKey, int).
+* **Applying Layered Effects**
+    * Effects are applied through AddLayeredEffect(LayeredEffectDefinition), modifying base attributes according to their operation type (e.g., add, multiply, set).
+* **Efficient Attribute Retrieval**
+    * The system caches computed values for quick access using GetCurrentAttribute(AttributeKey), reducing redundant recalculations.
+* **Clearing Effects**
+    * Reset all layered effects using ClearLayeredEffects(), reverting attributes to their base values.
 
-<blockquote>
-<b>Compile with Your Project</b>
-<ul><li>This system is designed to be lightweight and does not require external dependencies.</li></ul>
-</blockquote>
 
-### Potential Use Cases
-<ul>
-<li><b>Game Mechanics:</b> Adjust player stats dynamically (e.g., buffs, debuffs). </li>
-<li><b>Card-Based Games:</b> Implement effects similar to Magic: The Gathering layer-based calculations. </li>
-<li><b>Simulation & AI:</b> Modify agent properties over time with multiple influences. </li>
-</ul>
+#### 
 
-### Future Improvements
-<ul>
-<li>Support for time-based effect expiration.</li>
-<li>Optimized storage for large-scale entity handling.</li>
-<li>Customizable conflict resolution strategies for layered effects.</li>
-</ul>
+
+### **Example Usage**
+
+GameplaySimulation01.cpp
+
+
+### 
+
+
+### **Installation & Integration**
+
+
+
+* **Include the Header and Source Files**
+    * Ensure LayeredAttributes_v2.hpp and LayeredAttributes_v2.cpp are added to your project.
+* **Compile with Your Project**
+    * This system is designed to be lightweight and does not require external dependencies.
+
+
+### **Potential Use Cases**
+
+
+
+* **Game Mechanics**
+    * Adjust player stats dynamically (e.g., buffs, debuffs).
+* **Card-Based Games**
+    * Implement effects similar to Magic: The Gathering layer-based calculations.
+* **Simulation & AI**
+    * Modify agent properties over time with multiple influences.
+
+
+### **Future Improvements**
+
+
+
+* Support for time-based effect expiration.
+* Optimized storage for large-scale entity handling.
+* Customizable conflict resolution strategies for layered effects.
