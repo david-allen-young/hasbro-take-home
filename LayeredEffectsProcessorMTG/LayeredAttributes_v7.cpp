@@ -61,11 +61,9 @@ void LayeredAttributes_v7::AddLayeredEffect(LayeredEffectDefinition effectDef)
 	}
 	size_t timestamp = getNextTimestamp();
 	auto effect = Effect(effectDef, timestamp);
-	//updateCachedAttribute(effect);
 	AttributeKey attribute = effect.getAttribute();
 	updateAttribute(effect, cache[attribute]);
 	attributeDirty[attribute] = true;
-	//updateEffectsStorage(effect);
 	if (effects[attribute].size() + 1 > reservationSize)
 	{
 		effects[attribute].reserve(effects.size() + reservationSize);
@@ -154,42 +152,6 @@ void LayeredAttributes_v7::updateAttribute(const Effect& effect, int& result) co
 	else if (effect.getOperation() == EffectOperation_BitwiseAnd)
 	{
 		result &= effect.getModification();
-	}
-}
-
-// unused
-void LayeredAttributes_v7::updateLayerValidation(const Effect& effect)
-{
-	auto attribute = effect.getAttribute();
-	if (!attributeDirty[attribute] && !effects[attribute].empty() && effects[attribute].back().getLayer() > effect.getLayer())
-	{
-		// timestamps should be sorted already but
-		// in this case an effect with a lower layer
-		// arrived out of order and therefore we must sort
-		attributeDirty[attribute] = true;
-	}
-}
-
-// unused
-void LayeredAttributes_v7::updateCachedAttribute(const Effect& effect)
-{
-	AttributeKey attribute = effect.getAttribute();
-	updateAttribute(effect, cache[attribute]);
-	attributeDirty[attribute] = true;
-}
-
-// unused
-void LayeredAttributes_v7::updateEffectsStorage(const Effect& effect)
-{
-	auto attribute = effect.getAttribute();
-	if (effects[attribute].size() + 1 > reservationSize)
-	{
-		effects[attribute].reserve(effects.size() + reservationSize);
-	}
-	if (!flattenOperations(effect))
-	{
-		auto it = std::lower_bound(effects[attribute].begin(), effects[attribute].end(), effect, EffectComparator());
-		effects[attribute].insert(it, effect);
 	}
 }
 

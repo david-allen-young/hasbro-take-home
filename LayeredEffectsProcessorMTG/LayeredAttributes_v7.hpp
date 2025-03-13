@@ -58,11 +58,6 @@ private:
 
 	int calculateAttribute(AttributeKey attribute) const;
 	void updateAttribute(const Effect& effect, int& result) const;
-
-	void updateLayerValidation(const Effect& effect);
-	void updateCachedAttribute(const Effect& effect);
-	void updateEffectsStorage(const Effect& effect);
-
 	bool flattenOperations(const Effect& effect);
 
 	bool isValidAttributeKey(AttributeKey attribute) const;
