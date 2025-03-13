@@ -30,11 +30,11 @@ This repository contains an implementation of a Layered Effects Processor, desig
 	mutable std::unordered_map<AttributeKey, bool> attributeDirty;
 	mutable std::unordered_map<AttributeKey, int> cache;
     ```
-    * LayeredAttributes_v2::**baseAttributes** stores the base attributes as they arrive (refer to **SetBaseAttribute()** method.)
-    * LayeredAttributes_v2::**effects** stores the layered effects as they arrive (refer to **AddLayeredEffect()** method.)
+    * LayeredAttributes_v2::**baseAttributes** stores the base attributes as they arrive (refer to **::SetBaseAttribute()** method.)
+    * LayeredAttributes_v2::**effects** stores the layered effects as they arrive (refer to **::AddLayeredEffect()** method.)
     * LayeredAttributes_v2::**attributeDirty** tracks the validity of the cached (current) attribute value.
     * LayeredAttributes_v2::**cache** stores the cached result of applying the **std::vector<Effect>** to a given attribute.
-    * Each container is preceded by the **mutable** keyword to allow for lazy evaluation during calls to **GetCurrentAttribute()** from the client.
+    * Each container is preceded by the **mutable** keyword to allow for lazy evaluation during calls to **::GetCurrentAttribute()** from the client.
     * This is necessary because the pure **virtual** method **ILayeredAttributes::GetCurrentAttribute()** is specified as **const** in the interface file.
  
 * **Custom Comparator**
@@ -62,7 +62,7 @@ This repository contains an implementation of a Layered Effects Processor, desig
    	cache.reserve(reservationSize);
    }
    ```
-   * The constructor allows for optional error logging and pre-allocates memory according to a configurable reservation block size.
+   * The constructor allows for optional error logging and **pre-allocates memory** according to a configurable **reservation** block size.
       
 * **Setting Base Attributes**
    ```cpp
@@ -76,10 +76,10 @@ This repository contains an implementation of a Layered Effects Processor, desig
       attributeDirty[attribute] = true;
    }
    ```
-   * Attributes start at a default value (0) and can be explicitly set using SetBaseAttribute(AttributeKey, int).
-   * If error logging is enabled and the AttributeKey fails validation, write an error to the log.
-   * Set baseAttributes[attribute] to the given value.
-   * Update attributeDirty[attribute] to indicate that this attribute's cached value is no longer valid.
+   * Attributes start at a default value (0) and can be explicitly set using the **::SetBaseAttribute()** method.
+   * If error logging is enabled and the **AttributeKey** fails validation, write an error to the log.
+   * Set **baseAttributes[attribute]** to the given value.
+   * Update **attributeDirty[attribute]** to indicate that this attribute's cached value is no longer valid.
       
 * **Applying Layered Effects**
    ```cpp
@@ -108,12 +108,12 @@ This repository contains an implementation of a Layered Effects Processor, desig
    	}
    }
    ```
-    * Effects are applied through AddLayeredEffect(LayeredEffectDefinition), modifying base attributes according to their operation type (e.g., add, multiply, set).
-    * If error logging is enabled and the AttributeKey fails validation, write an error to the log.
-    * Generate a unique timestamp for this effect.
-    * Attempt to update the cache while avoiding a full recalculation.
-    * If the incremental update cannot proceed, insert this effect in priority order {layer, timestamp} using the custom comparator.
-    * Mark the attribute dirty so that it will be recalculated upon retrieval.
+    * Effects are applied through **::AddLayeredEffect()**, modifying base attributes according to their operation type (e.g., add, multiply, set).
+    * If error logging is enabled and the **AttributeKey** fails validation, write an error to the log.
+    * Generate a unique **timestamp** for this effect.
+    * Attempt to update the cache while **avoiding a full** recalculation.
+    * If the **incremental update** cannot proceed, insert this effect in priority order **{layer, timestamp}** using the **custom comparator**.
+    * Mark the attribute **dirty** so that it will be **recalculated** upon retrieval.
  
       
 * **Efficient Attribute Retrieval**
@@ -141,8 +141,8 @@ This repository contains an implementation of a Layered Effects Processor, desig
    	return it->second;
    }
    ```
-    * The system caches computed values for quick access using GetCurrentAttribute(AttributeKey), reducing redundant recalculations.
-    * If error logging is enabled and the AttributeKey fails validation, write an error to the log.
+    * The system caches computed values for quick access using **::GetCurrentAttribute()**, reducing redundant recalculations.
+    * If error logging is enabled and the **AttributeKey** fails validation, write an error to the log.
     * If the attribute key has not been added to the cache yet, create it.
     * If the attribute is newly created or was marked dirty, perform a full calculation.
     * If a calculation was performed, store the result as the new cached value.
@@ -158,7 +158,7 @@ This repository contains an implementation of a Layered Effects Processor, desig
    	attributeDirty = {};
    }
    ```
-   * Reset all layered effects using ClearLayeredEffects(), reverting attributes to their base values.
+   * Reset all layered effects using **::ClearLayeredEffects()**, reverting attributes to their base values.
 
 
 #### 
