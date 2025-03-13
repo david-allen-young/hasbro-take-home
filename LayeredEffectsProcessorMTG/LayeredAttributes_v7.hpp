@@ -3,41 +3,11 @@
 #include <vector>
 #include <unordered_map>
 
-
-class Effect
+class LayeredAttributes_v7 : public ILayeredAttributes
 {
 public:
-	Effect(LayeredEffectDefinition effectDef, size_t timestamp)
-		: effectDef(std::move(effectDef)), timestamp(timestamp) {}
-	void updateModification(int modification) { effectDef.Modification = modification; }
-	AttributeKey getAttribute() const { return effectDef.Attribute; }
-	int getOperation() const { return effectDef.Operation; }
-	int getModification() const { return effectDef.Modification; }
-	int getLayer() const { return effectDef.Layer; }
-	size_t getTimestamp() const { return timestamp; }
-
-private:
-	LayeredEffectDefinition effectDef;
-	size_t timestamp;
-};
-
-struct EffectComparator
-{
-	bool operator()(const Effect& a, const Effect& b) const
-	{
-		if (a.getLayer() != b.getLayer())
-		{
-			return a.getLayer() < b.getLayer();
-		}
-		return a.getTimestamp() < b.getTimestamp();
-	}
-};
-
-class LayeredAttributes_v6 : public ILayeredAttributes
-{
-public:
-	LayeredAttributes_v6(bool errorLoggingEnabled = false, size_t rereservationSize = 10ULL);
-	virtual ~LayeredAttributes_v6() = default;
+	LayeredAttributes_v7(bool errorLoggingEnabled = false, size_t rereservationSize = 10ULL);
+	virtual ~LayeredAttributes_v7() = default;
 	void SetBaseAttribute(AttributeKey attribute, int value) override;
 	int GetCurrentAttribute(AttributeKey attribute) const override;
 	void AddLayeredEffect(LayeredEffectDefinition effect) override;
@@ -49,6 +19,36 @@ private:
 
 	size_t nextTimestamp = 0;
 	size_t getNextTimestamp() { return nextTimestamp++; }
+
+	class Effect
+	{
+	public:
+		Effect(LayeredEffectDefinition effectDef, size_t timestamp)
+			: effectDef(std::move(effectDef)), timestamp(timestamp) {
+		}
+		void updateModification(int modification) { effectDef.Modification = modification; }
+		AttributeKey getAttribute() const { return effectDef.Attribute; }
+		int getOperation() const { return effectDef.Operation; }
+		int getModification() const { return effectDef.Modification; }
+		int getLayer() const { return effectDef.Layer; }
+		size_t getTimestamp() const { return timestamp; }
+
+	private:
+		LayeredEffectDefinition effectDef;
+		size_t timestamp;
+	};
+
+	struct EffectComparator
+	{
+		bool operator()(const Effect& a, const Effect& b) const
+		{
+			if (a.getLayer() != b.getLayer())
+			{
+				return a.getLayer() < b.getLayer();
+			}
+			return a.getTimestamp() < b.getTimestamp();
+		}
+	};
 
 	mutable std::unordered_map<AttributeKey, int> baseAttributes;
 	mutable std::vector<Effect> effects;
