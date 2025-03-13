@@ -81,6 +81,7 @@ void LayeredAttributes_v7::ClearLayeredEffects()
 {
 	effects = {};
 	cache = {};
+	attributeDirty = {};
 }
 
 bool LayeredAttributes_v7::isValidAttributeKey(AttributeKey attribute) const
