@@ -51,7 +51,6 @@ private:
 	};
 
 	mutable std::unordered_map<AttributeKey, int> baseAttributes;
-	//mutable std::vector<Effect> effects;
 	mutable std::unordered_map<AttributeKey, std::vector<Effect>> effects;
 	mutable std::unordered_map<AttributeKey, bool> attributeDirty;
 	mutable std::unordered_map<AttributeKey, int> cache;
