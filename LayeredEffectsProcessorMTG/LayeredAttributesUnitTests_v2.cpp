@@ -232,7 +232,7 @@ void LayeredAttributesUnitTests_v2::testZeroReservation()
 	// this block will throw an error without proper implementation
 	{
 		size_t initialVectorCapacity = 0;
-		attributes = std::make_unique<Implementation>(false, false, initialVectorCapacity);
+		attributes = std::make_unique<Implementation>(false, initialVectorCapacity);
 	}
 
 	attributes->SetBaseAttribute(AttributeKey::AttributeKey_Power, 2);
