@@ -2,8 +2,8 @@
 #include <stdexcept>
 #include <algorithm>
 
-LayeredAttributes_v6::LayeredAttributes_v6(bool errorLoggingEnabled, bool errorHandlingEnabled, size_t reservationSize)
-	: errorLoggingEnabled(errorLoggingEnabled), errorHandlingEnabled(errorHandlingEnabled), reservationSize(std::max(1ULL, reservationSize))
+LayeredAttributes_v6::LayeredAttributes_v6(bool errorLoggingEnabled, size_t reservationSize)
+	: errorLoggingEnabled(errorLoggingEnabled), reservationSize(std::max(1ULL, reservationSize))
 {
 
 }
@@ -13,6 +13,10 @@ LayeredAttributes_v6::LayeredAttributes_v6(bool errorLoggingEnabled, bool errorH
 //alter any existing layered effects.
 void LayeredAttributes_v6::SetBaseAttribute(AttributeKey attribute, int value)
 {
+	if (errorLoggingEnabled && !isValidAttributeKey(attribute))
+	{
+		logError(attribute);
+	}
 	baseAttributes[attribute] = value;
 	cache.erase(attribute);
 }
@@ -22,6 +26,10 @@ void LayeredAttributes_v6::SetBaseAttribute(AttributeKey attribute, int value)
 //effects.
 int LayeredAttributes_v6::GetCurrentAttribute(AttributeKey attribute) const
 {
+	if (errorLoggingEnabled && !isValidAttributeKey(attribute))
+	{
+		logError(attribute);
+	}
 	if (cache.count(attribute) == 0)
 	{
 		int result = calculateAttribute(attribute);
@@ -37,7 +45,11 @@ int LayeredAttributes_v6::GetCurrentAttribute(AttributeKey attribute) const
 //applied in the same order they were added. (see LayeredEffectDefinition.Layer)
 void LayeredAttributes_v6::AddLayeredEffect(LayeredEffectDefinition effectDef)
 {
-	int timestamp = getNextTimestamp();
+	if (errorLoggingEnabled && !isValidAttributeKey(effectDef.Attribute))
+	{
+		logError(effectDef.Attribute);
+	}
+	size_t timestamp = getNextTimestamp();
 	auto effect = Effect(effectDef, timestamp);
 	updateLayerValidation(effect);
 	updateCachedAttribute(effect);
@@ -52,9 +64,30 @@ void LayeredAttributes_v6::ClearLayeredEffects()
 	cache.clear();
 }
 
-void LayeredAttributes_v6::logError([[maybe_unused]] LayeredEffectDefinition effect)
+bool LayeredAttributes_v6::isValidAttributeKey(AttributeKey attribute) const
 {
-	// Imagine that this method writes something useful to glog or similar logging service
+	// as defined in ILayeredAttributes.hpp
+	// at the time of this implementation
+	/*
+		enum AttributeKey : int
+		{
+			AttributeKey_NotAssessed = 0,
+			AttributeKey_Power,
+			AttributeKey_Toughness,
+			AttributeKey_Loyalty,
+			AttributeKey_Color,
+			AttributeKey_Types,
+			AttributeKey_Subtypes,
+			AttributeKey_Supertypes,
+			AttributeKey_ManaValue,
+			AttributeKey_Controller
+		};
+	*/
+	if (attribute >= AttributeKey_Power && attribute <= AttributeKey_Controller)
+	{
+		return true;
+	}
+	return false;
 }
 
 void LayeredAttributes_v6::logError([[maybe_unused]] AttributeKey attribute) const

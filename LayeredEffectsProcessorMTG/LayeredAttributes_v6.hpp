@@ -7,7 +7,7 @@
 class Effect
 {
 public:
-	Effect(LayeredEffectDefinition effectDef, int timestamp)
+	Effect(LayeredEffectDefinition effectDef, size_t timestamp)
 	{
 		std::swap(effectDef, this->effectDef);
 		std::swap(timestamp, this->timestamp);
@@ -18,11 +18,11 @@ public:
 	int getOperation() const { return effectDef.Operation; }
 	int getModification() const { return effectDef.Modification; }
 	int getLayer() const { return effectDef.Layer; }
-	int getTimestamp() const { return timestamp; }
+	size_t getTimestamp() const { return timestamp; }
 
 private:
 	LayeredEffectDefinition effectDef;
-	int timestamp;
+	size_t timestamp;
 };
 
 struct EffectComparator
@@ -40,7 +40,7 @@ struct EffectComparator
 class LayeredAttributes_v6 : public ILayeredAttributes
 {
 public:
-	LayeredAttributes_v6(bool errorLoggingEnabled = false, bool errorHandlingEnabled = false, size_t rereservationSize = 10ULL);
+	LayeredAttributes_v6(bool errorLoggingEnabled = false, size_t rereservationSize = 10ULL);
 	virtual ~LayeredAttributes_v6() = default;
 	void SetBaseAttribute(AttributeKey attribute, int value) override;
 	int GetCurrentAttribute(AttributeKey attribute) const override;
@@ -49,7 +49,6 @@ public:
 
 private:
 	bool errorLoggingEnabled;
-	bool errorHandlingEnabled;
 	size_t reservationSize;
 
 	size_t nextTimestamp = 0;
@@ -69,6 +68,6 @@ private:
 
 	bool flattenOperations(const Effect& effect);
 
-	void logError(LayeredEffectDefinition effectDef);
+	bool isValidAttributeKey(AttributeKey attribute) const;
 	void logError(AttributeKey attribute) const;
 };
