@@ -24,25 +24,21 @@ This repository contains an implementation of a Layered Effects Processor, desig
 
 
 * **Data Structures**
+    ```
+	mutable std::unordered_map<AttributeKey, int> baseAttributes;
+	mutable std::unordered_map<AttributeKey, std::vector<Effect>> effects;
+	mutable std::unordered_map<AttributeKey, bool> attributeDirty;
+	mutable std::unordered_map<AttributeKey, int> cache;
+    ```
+    * LayeredAttributes_v2::baseAttributes stores the base attributes as they arrive (refer to SetBaseAttribute() method.)
+    * LayeredAttributes_v2::effects stores the layered effects as they arrive (refer to AddLayeredEffect() method.)
+    * LayeredAttributes_v2::attributeDirty tracks the validity of the cached (current) attribute value.
+    * LayeredAttributes_v2::cache stores the cached result of applying the std::vector<Effect> to a given attribute.
+    * Each container is preceded by the **mutable** keyword to allow for lazy evaluation during calls to GetCurrentAttribute() from the client.
+    * This is necessary because the pure virtual method ILayeredAttributes::GetCurrentAttribute() is specified as **const** in the interface file.
+ 
+* **Custom Comparator**
     ```cpp
-	class Effect
-	{
-	public:
-		Effect(LayeredEffectDefinition effectDef, size_t timestamp)
-			: effectDef(std::move(effectDef)), timestamp(timestamp) {
-		}
-		void updateModification(int modification) { effectDef.Modification = modification; }
-		AttributeKey getAttribute() const { return effectDef.Attribute; }
-		int getOperation() const { return effectDef.Operation; }
-		int getModification() const { return effectDef.Modification; }
-		int getLayer() const { return effectDef.Layer; }
-		size_t getTimestamp() const { return timestamp; }
-
-	private:
-		LayeredEffectDefinition effectDef;
-		size_t timestamp;
-	};
-
 	struct EffectComparator
 	{
 		bool operator()(const Effect& a, const Effect& b) const
@@ -54,20 +50,8 @@ This repository contains an implementation of a Layered Effects Processor, desig
 			return a.getTimestamp() < b.getTimestamp();
 		}
 	};
-
-	mutable std::unordered_map<AttributeKey, int> baseAttributes;
-	mutable std::unordered_map<AttributeKey, std::vector<Effect>> effects;
-	mutable std::unordered_map<AttributeKey, bool> attributeDirty;
-	mutable std::unordered_map<AttributeKey, int> cache;
     ```
-    * LayeredAttributes_v2::Effect is a helper class that serves as a wrapper for LayeredEffectDefinition and adds a timestamp.
-    * LayeredAttributes_v2::EffectComparator is used to keep the effects container sorted by **{layer, timestamp}** during insertions.
-    * LayeredAttributes_v2::baseAttributes stores the base attributes as they arrive (refer to SetBaseAttribute() method.)
-    * LayeredAttributes_v2::effects stores the layered effects as they arrive (refer to AddLayeredEffect() method.)
-    * LayeredAttributes_v2::attributeDirty tracks the validity of the cached (current) attribute value.
-    * LayeredAttributes_v2::cache stores the cached result of applying the std::vector<Effect> to a given attribute.
-    * Each container is preceded by the **mutable** keyword to allow for lazy evaluation during calls to GetCurrentAttribute() from the client.
-    * This is necessary because the pure virtual method ILayeredAttributes::GetCurrentAttribute() is specified as **const** in the interface file.
+    * LayeredAttributes_v2::EffectComparator is used to keep the effects container sorted by **{layer, timestamp}** during insertions.  
 
 * **Initialization**
    ```cpp
