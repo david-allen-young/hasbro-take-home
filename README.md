@@ -39,14 +39,8 @@ This repository contains an implementation of a Layered Effects Processor, desig
 
 ### **Example Usage**
 
-GameplaySimulation01.cpp
+* GameplaySimulation01.cpp
 ```cpp
-// Example program demonstrating LayeredAttributes_v2 in a Magic: The Gathering scenario
-// Author: David Allen Young | Intended for Technical Review
-//
-// This simulation highlights how the LayeredAttributes_v2 class correctly applies and resolves game mechanics.
-// It tracks power and toughness modifications using a sequence of turns where effects from different layers are added and then processed.
-
 #include <iostream>
 #include "../src/LayeredAttributes_v2.hpp"
 
@@ -111,6 +105,20 @@ int main() {
 
     return 0;
 }
+```
+
+* Output
+```
+--- Turn 1: Base stats ---
+Test Creature starts as 2/2
+--- Turn 1: Giant Growth Applied (+3/+3) ---
+Test Creature after Giant Growth: 5/5
+--- Turn 2: Static Buff Applied (+1/+1) ---
+Test Creature after Static Buff: 6/6
+--- Turn 3: Xenagos, God of Revels Effect Applied (base: x2/x1) ---
+Test Creature after Xenagos Effect: 8/6
+--- Turn 4: Effects Worn Off ---
+Test Creature after all effects expire: 2/2
 ```
 
 ### 
