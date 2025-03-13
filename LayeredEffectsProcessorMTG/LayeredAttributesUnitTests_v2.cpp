@@ -1,10 +1,10 @@
 #include "LayeredAttributesUnitTests_v2.hpp"
-#include "LayeredAttributes_v6.hpp"
+#include "LayeredAttributes_v4.hpp"
 #include "LayeredAttributes_v7.hpp"
 #include <assert.h>
 #include <iostream>
 
-//using Implementation = LayeredAttributes_v6;
+//using Implementation = LayeredAttributes_v4;
 using Implementation = LayeredAttributes_v7;
 
 
@@ -106,13 +106,13 @@ void LayeredAttributesUnitTests_v2::testConsolidation()
 	int basePower = 2;
 	attributes->SetBaseAttribute(AttributeKey::AttributeKey_Power, basePower);
 	assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) == basePower);
-	//attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Subtract, /*modifier*/1, /*layer*/2 });
-	//attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Subtract, /*modifier*/1, /*layer*/2 });
-	//attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Subtract, /*modifier*/1, /*layer*/2 });
-	//assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) == basePower - 3);
-	//attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
-	//attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
-	//attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Subtract, /*modifier*/1, /*layer*/2 });
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Subtract, /*modifier*/1, /*layer*/2 });
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Subtract, /*modifier*/1, /*layer*/2 });
+	assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) == basePower - 3);
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
 	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
 	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
 	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_Add, /*modifier*/1, /*layer*/2 });
@@ -186,8 +186,8 @@ void LayeredAttributesUnitTests_v2::testComplexAdd_v1()
 		attributes->AddLayeredEffect(effect);
 	}
 	//std::cout << "Power==" << attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) << std::endl;
-	//assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) == 8);
-	//assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Toughness) == 2);
+	assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) == 8);
+	assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Toughness) == 2);
 	std::cout << "testComplexAdd_v1 passed" << std::endl;
 }
 
