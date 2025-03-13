@@ -256,7 +256,7 @@ Test Creature after all effects expire: 2/2
 
 
 * **Include the Header and Source Files**
-    * Ensure LayeredAttributes_v2.hpp and LayeredAttributes_v2.cpp are added to your project.
+    * Ensure **LayeredAttributes_v2.hpp** and **LayeredAttributes_v2.cpp** are added to your project.
 * **Compile with Your Project**
     * This system is designed to be lightweight and does not require external dependencies.
 
