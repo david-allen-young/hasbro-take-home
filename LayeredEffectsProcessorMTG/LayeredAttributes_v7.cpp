@@ -7,7 +7,6 @@ LayeredAttributes_v7::LayeredAttributes_v7(bool errorLoggingEnabled, size_t rese
 {
 	baseAttributes.reserve(reservationSize);
 	cache.reserve(reservationSize);
-	effects.reserve(reservationSize);
 }
 
 //Set the base value for an attribute on this object. All base values
@@ -20,7 +19,7 @@ void LayeredAttributes_v7::SetBaseAttribute(AttributeKey attribute, int value)
 		logError(attribute);
 	}
 	baseAttributes[attribute] = value;
-	cache.erase(attribute);
+	attributeDirty[attribute] = true;
 }
 
 //Return the current value for an attribute on this object. Will
@@ -36,6 +35,15 @@ int LayeredAttributes_v7::GetCurrentAttribute(AttributeKey attribute) const
 	if (it == cache.end())
 	{
 		it = cache.insert({ attribute, calculateAttribute(attribute) }).first;
+	}
+	else if (attributeDirty[attribute])
+	{
+		it->second = calculateAttribute(attribute);
+		attributeDirty[attribute] = false;
+	}
+	else
+	{
+		// do nothing
 	}
 	return it->second;
 }
@@ -102,18 +110,8 @@ int LayeredAttributes_v7::calculateAttribute(AttributeKey attribute) const
 	// the map defaults to zero if no key is present
 	int result = baseAttributes[attribute];
 
-	if (effectsUnsorted)
+	for (auto& effect : effects[attribute])
 	{
-		std::sort(effects.begin(), effects.end(), EffectComparator());
-		effectsUnsorted = false;
-	}
-
-	for (auto& effect : effects)
-	{
-		if (effect.getAttribute() != attribute)
-		{
-			continue;
-		}
 		updateAttribute(effect, result);
 	}
 
@@ -150,19 +148,20 @@ void LayeredAttributes_v7::updateAttribute(const Effect& effect, int& result) co
 
 void LayeredAttributes_v7::updateLayerValidation(const Effect& effect)
 {
-	if (!effectsUnsorted && !effects.empty() && effects.back().getLayer() > effect.getLayer())
+	auto attribute = effect.getAttribute();
+	if (!attributeDirty[attribute] && !effects[attribute].empty() && effects[attribute].back().getLayer() > effect.getLayer())
 	{
 		// timestamps should be sorted already but
 		// in this case an effect with a lower layer
 		// arrived out of order and therefore we must sort
-		effectsUnsorted = true;
+		attributeDirty[attribute] = true;
 	}
 }
 
 void LayeredAttributes_v7::updateCachedAttribute(const Effect& effect)
 {
 	AttributeKey attribute = effect.getAttribute();
-	if (effectsUnsorted)
+	if (attributeDirty[attribute])
 	{
 		cache.erase(attribute);
 	}
@@ -178,28 +177,28 @@ void LayeredAttributes_v7::updateCachedAttribute(const Effect& effect)
 
 void LayeredAttributes_v7::updateEffectsStorage(const Effect& effect)
 {
-	if (effects.size() + 1 > reservationSize)
+	auto attribute = effect.getAttribute();
+	if (effects[attribute].size() + 1 > reservationSize)
 	{
-		effects.reserve(effects.size() + reservationSize);
+		effects[attribute].reserve(effects.size() + reservationSize);
 	}
 	if (!flattenOperations(effect))
 	{
-		effects.push_back(effect);
+		auto it = std::lower_bound(effects[attribute].begin(), effects[attribute].end(), effect, EffectComparator());
+		effects[attribute].insert(it, effect);
 	}
 }
 
 bool LayeredAttributes_v7::flattenOperations(const Effect& effect)
 {
 	bool flattened = false;
-	if (!effects.empty())
+	auto attribute = effect.getAttribute();
+	if (!effects[attribute].empty())
 	{
-		auto& oldEffect = effects.back();
-		bool isSameLayer = (oldEffect.getLayer() == effect.getLayer());
-		bool isSameAttribute = (oldEffect.getAttribute() == effect.getAttribute());
-		bool isSameOperation = (oldEffect.getOperation() == effect.getOperation());
-		if (isSameLayer && isSameAttribute && isSameOperation)
+		auto& oldEffect = effects[attribute].back();
+		auto operation = oldEffect.getOperation();
+		if (operation == effect.getOperation() && oldEffect.getLayer() == effect.getLayer())
 		{
-			auto operation = oldEffect.getOperation();
 			int updatedModification = oldEffect.getModification();
 			if (operation == EffectOperation_Set)
 			{
