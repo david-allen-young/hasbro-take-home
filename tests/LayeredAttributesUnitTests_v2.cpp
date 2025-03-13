@@ -1,6 +1,6 @@
 #include "LayeredAttributesUnitTests_v2.hpp"
-#include "LayeredAttributes_v1.hpp"
-#include "LayeredAttributes_v2.hpp"
+#include "../src/LayeredAttributes_v1.hpp"
+#include "../src/LayeredAttributes_v2.hpp"
 #include <assert.h>
 #include <iostream>
 

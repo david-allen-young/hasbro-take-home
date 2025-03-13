@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "ILayeredAttributes.hpp"
+#include "../src/ILayeredAttributes.hpp"
 
 class LayeredAttributesUnitTests_v2
 {

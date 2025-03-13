@@ -21,27 +21,27 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LayeredAttributes_v1.cpp">
+    <ClCompile Include="..\src\LayeredAttributes_v1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LayeredAttributes_v2.cpp">
+    <ClCompile Include="..\src\LayeredAttributes_v2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LayeredAttributesUnitTests_v2.cpp">
+    <ClCompile Include="..\tests\LayeredAttributesUnitTests_v2.cpp">
       <Filter>Unit Tests</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ILayeredAttributes.hpp">
+    <ClInclude Include="..\src\ILayeredAttributes.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LayeredAttributes_v2.hpp">
+    <ClInclude Include="..\src\LayeredAttributes_v1.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LayeredAttributes_v1.hpp">
+    <ClInclude Include="..\src\LayeredAttributes_v2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LayeredAttributesUnitTests_v2.hpp">
+    <ClInclude Include="..\tests\LayeredAttributesUnitTests_v2.hpp">
       <Filter>Unit Tests</Filter>
     </ClInclude>
   </ItemGroup>

@@ -18,6 +18,18 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\LayeredAttributes_v1.cpp" />
+    <ClCompile Include="..\src\LayeredAttributes_v2.cpp" />
+    <ClCompile Include="..\tests\LayeredAttributesUnitTests_v2.cpp" />
+    <ClCompile Include="Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\ILayeredAttributes.hpp" />
+    <ClInclude Include="..\src\LayeredAttributes_v1.hpp" />
+    <ClInclude Include="..\src\LayeredAttributes_v2.hpp" />
+    <ClInclude Include="..\tests\LayeredAttributesUnitTests_v2.hpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -128,18 +140,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="LayeredAttributesUnitTests_v2.cpp" />
-    <ClCompile Include="LayeredAttributes_v1.cpp" />
-    <ClCompile Include="LayeredAttributes_v2.cpp" />
-    <ClCompile Include="Main.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="ILayeredAttributes.hpp" />
-    <ClInclude Include="LayeredAttributesUnitTests_v2.hpp" />
-    <ClInclude Include="LayeredAttributes_v1.hpp" />
-    <ClInclude Include="LayeredAttributes_v2.hpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

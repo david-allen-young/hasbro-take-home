@@ -1,4 +1,4 @@
-#include "LayeredAttributesUnitTests_v2.hpp"
+#include "../tests/LayeredAttributesUnitTests_v2.hpp"
 
 int main()
 {
