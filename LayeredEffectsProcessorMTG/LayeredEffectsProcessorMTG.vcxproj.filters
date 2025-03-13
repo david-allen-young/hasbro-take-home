@@ -51,6 +51,9 @@
     <ClCompile Include="LayeredAttributesUnitTests_v2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="LayeredAttributes_v7.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ILayeredAttributes.hpp">
@@ -81,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LayeredAttributesUnitTests_v2.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LayeredAttributes_v7.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
