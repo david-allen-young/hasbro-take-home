@@ -48,16 +48,17 @@ int power = attributes.GetCurrentAttribute(AttributeKey_Power); // Expected: 8 <
 ### Installation & Integration
 
 #### Include the Header and Source Files
-Ensure LayeredAttributes_v2.hpp and LayeredAttributes_v2.cpp are added to your project.
+<blockquote>Ensure LayeredAttributes_v2.hpp and LayeredAttributes_v2.cpp are added to your project.</blockquote>
 
 #### Compile with Your Project
-This system is designed to be lightweight and does not require external dependencies.
+<blockquote>This system is designed to be lightweight and does not require external dependencies.</blockquote>
 
 ### Potential Use Cases
-
-<b>Game Mechanics:</b> Adjust player stats dynamically (e.g., buffs, debuffs). <br>
-<b>Card-Based Games:</b> Implement effects similar to Magic: The Gathering layer-based calculations. <br>
-<b>Simulation & AI:</b> Modify agent properties over time with multiple influences. <br>
+<ul>
+<li><b>Game Mechanics:</b> Adjust player stats dynamically (e.g., buffs, debuffs). </li>
+<li><b>Card-Based Games:</b> Implement effects similar to Magic: The Gathering layer-based calculations. </li>
+<li><b>Simulation & AI:</b> Modify agent properties over time with multiple influences. </li>
+</ul>
 
 ### Future Improvements
 #### Support for time-based effect expiration.
