@@ -60,8 +60,8 @@ void LayeredAttributes_v6::AddLayeredEffect(LayeredEffectDefinition effectDef)
 //all current attributes will be equal to the base attributes.
 void LayeredAttributes_v6::ClearLayeredEffects()
 {
-	effects.clear();
-	cache.clear();
+	effects = {};
+	cache = {};
 }
 
 bool LayeredAttributes_v6::isValidAttributeKey(AttributeKey attribute) const
