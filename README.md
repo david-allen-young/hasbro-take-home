@@ -13,11 +13,14 @@ This repository contains an implementation of a <b>Layered Attributes System</b>
 
 ### How It Works
 
-#### Setting Base Attributes
-<blockquote>Attributes start at a default value (0) and can be explicitly set using SetBaseAttribute(AttributeKey, int).</blockquote>
-
-#### Applying Layered Effects
-<blockquote>Effects are applied through AddLayeredEffect(LayeredEffectDefinition), modifying base attributes according to their operation type (e.g., add, multiply, set).</blockquote>
+<blockquote>
+<b>Setting Base Attributes</b>
+<ul><li>Attributes start at a default value (0) and can be explicitly set using SetBaseAttribute(AttributeKey, int).</li></ul>
+</blockquote>
+<blockquote>
+<b>Applying Layered Effects</b>
+<ul><li>Effects are applied through AddLayeredEffect(LayeredEffectDefinition), modifying base attributes according to their operation type (e.g., add, multiply, set).</li></ul>
+</blockquote>
 
 #### Efficient Attribute Retrieval
 <blockquote>The system caches computed values for quick access using GetCurrentAttribute(AttributeKey), reducing redundant recalculations.</blockquote>
@@ -46,12 +49,12 @@ int power = attributes.GetCurrentAttribute(AttributeKey_Power); // Expected: 8 <
 </pre>
 
 ### Installation & Integration
-
-#### Include the Header and Source Files
+<ul>
+<li>Include the Header and Source Files</li>
 <blockquote>Ensure LayeredAttributes_v2.hpp and LayeredAttributes_v2.cpp are added to your project.</blockquote>
-
-#### Compile with Your Project
+<li>Compile with Your Project</li>
 <blockquote>This system is designed to be lightweight and does not require external dependencies.</blockquote>
+</ul>
 
 ### Potential Use Cases
 <ul>
@@ -61,6 +64,8 @@ int power = attributes.GetCurrentAttribute(AttributeKey_Power); // Expected: 8 <
 </ul>
 
 ### Future Improvements
-#### Support for time-based effect expiration.
-#### Optimized storage for large-scale entity handling.
-#### Customizable conflict resolution strategies for layered effects.
+<ul>
+<li>Support for time-based effect expiration.</li>
+<li>Optimized storage for large-scale entity handling.</li>
+<li>Customizable conflict resolution strategies for layered effects.</li>
+</ul>
