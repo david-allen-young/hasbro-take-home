@@ -16,36 +16,15 @@
     <Filter Include="Unit Tests">
       <UniqueIdentifier>{06d9e394-b288-43ef-9c7d-e3d1ecd74f94}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Extensions">
-      <UniqueIdentifier>{ec6aee05-5de8-4d19-9976-b8a431313507}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LayeredAttributes_v2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LayeredAttributes_v1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LayeredAttributes_v3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="LayeredAttributesUnitTests.cpp">
       <Filter>Unit Tests</Filter>
     </ClCompile>
-    <ClCompile Include="LA_v3_Extension_Removals.cpp">
-      <Filter>Extensions</Filter>
-    </ClCompile>
-    <ClCompile Include="LA_v3_Extension_Removals_v2.cpp">
-      <Filter>Extensions</Filter>
-    </ClCompile>
     <ClCompile Include="LayeredAttributes_v4.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="LayeredAttributes_v6.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LayeredAttributesUnitTests_v2.cpp">
@@ -59,34 +38,16 @@
     <ClInclude Include="ILayeredAttributes.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LayeredAttributes_v2.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="LayeredAttributesUnitTests.hpp">
       <Filter>Unit Tests</Filter>
-    </ClInclude>
-    <ClInclude Include="LayeredAttributes_v1.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LayeredAttributes_v3.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LA_v3_Extension_Removals.hpp">
-      <Filter>Extensions</Filter>
-    </ClInclude>
-    <ClInclude Include="LA_v3_Extension_Removals_v2.hpp">
-      <Filter>Extensions</Filter>
-    </ClInclude>
-    <ClInclude Include="LayeredAttributes_v4.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="LayeredAttributes_v6.hpp">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LayeredAttributesUnitTests_v2.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LayeredAttributes_v7.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LayeredAttributes_v4.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
