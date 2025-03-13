@@ -136,6 +136,7 @@
     <ClCompile Include="LayeredAttributes_v3.cpp" />
     <ClCompile Include="LayeredAttributes_v4.cpp" />
     <ClCompile Include="LayeredAttributes_v6.cpp" />
+    <ClCompile Include="LayeredAttributes_v7.cpp" />
     <ClCompile Include="LA_v3_Extension_Removals.cpp" />
     <ClCompile Include="LA_v3_Extension_Removals_v2.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="LayeredAttributes_v3.hpp" />
     <ClInclude Include="LayeredAttributes_v4.hpp" />
     <ClInclude Include="LayeredAttributes_v6.hpp" />
+    <ClInclude Include="LayeredAttributes_v7.hpp" />
     <ClInclude Include="LA_v3_Extension_Removals.hpp" />
     <ClInclude Include="LA_v3_Extension_Removals_v2.hpp" />
   </ItemGroup>
