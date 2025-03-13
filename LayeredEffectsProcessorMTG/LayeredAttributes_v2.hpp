@@ -3,11 +3,11 @@
 #include <vector>
 #include <unordered_map>
 
-class LayeredAttributes_v7 : public ILayeredAttributes
+class LayeredAttributes_v2 : public ILayeredAttributes
 {
 public:
-	LayeredAttributes_v7(bool errorLoggingEnabled = false, size_t rereservationSize = 10ULL);
-	virtual ~LayeredAttributes_v7() = default;
+	LayeredAttributes_v2(bool errorLoggingEnabled = false, size_t rereservationSize = 10ULL);
+	virtual ~LayeredAttributes_v2() = default;
 	void SetBaseAttribute(AttributeKey attribute, int value) override;
 	int GetCurrentAttribute(AttributeKey attribute) const override;
 	void AddLayeredEffect(LayeredEffectDefinition effect) override;
