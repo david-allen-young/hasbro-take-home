@@ -1,33 +1,34 @@
 # Layered Attributes System
 
 ### Overview
-This repository contains an implementation of a Layered Attributes System, designed to dynamically modify and manage game entity attributes through a structured layering system. The system allows for efficient calculation of final attribute values by applying various effects such as addition, subtraction, multiplication, and bitwise operations.
+This repository contains an implementation of a <b>Layered Attributes System</b>, designed to dynamically modify and manage game entity attributes through a structured layering system. The system allows for efficient calculation of final attribute values by applying various effects such as addition, subtraction, multiplication, and bitwise operations.
 
 ### Features
 <ul>
-<li>Base Attribute Management: Set and retrieve base attribute values for an entity.</li>
-<li>Layered Effects Application: Apply multiple effects to attributes, which can be modified incrementally or in bulk.</li>
-<li>Incremental Updates: Optimize performance by reducing redundant calculations when modifying existing effects.</li>
-<li>Error Logging (Optional): Validate attribute modifications and log issues when necessary.</li>
+<li><b>Base Attribute Management:</b> Set and retrieve base attribute values for an entity.</li>
+<li><b>Layered Effects Application:</b> Apply multiple effects to attributes, which can be modified incrementally or in bulk.</li>
+<li><b>Incremental Updates:</b> Optimize performance by reducing redundant calculations when modifying existing effects.</li>
+<li><b>Error Logging (Optional):</b> Validate attribute modifications and log issues when necessary.</li>
 </ul>
 
 ### How It Works
 
 #### Setting Base Attributes
-Attributes start at a default value (0) and can be explicitly set using SetBaseAttribute(AttributeKey, int).
+<blockquote>Attributes start at a default value (0) and can be explicitly set using SetBaseAttribute(AttributeKey, int).</blockquote>
 
 #### Applying Layered Effects
-Effects are applied through AddLayeredEffect(LayeredEffectDefinition), modifying base attributes according to their operation type (e.g., add, multiply, set).
+<blockquote>Effects are applied through AddLayeredEffect(LayeredEffectDefinition), modifying base attributes according to their operation type (e.g., add, multiply, set).</blockquote>
 
 #### Efficient Attribute Retrieval
-The system caches computed values for quick access using GetCurrentAttribute(AttributeKey), reducing redundant recalculations.
+<blockquote>The system caches computed values for quick access using GetCurrentAttribute(AttributeKey), reducing redundant recalculations.</blockquote>
 
 #### Clearing Effects
-Reset all layered effects using ClearLayeredEffects(), reverting attributes to their base values.
+<blockquote>Reset all layered effects using ClearLayeredEffects(), reverting attributes to their base values.</blockquote>
 
 #### Example Usage
-cpp
-<blockquote>
+<pre>
+cpp <br>
+  
 LayeredAttributes_v2 attributes(true, 10); <br>
 
 // Set base attribute <br>
@@ -42,7 +43,7 @@ attributes.AddLayeredEffect(effectDef); <br>
 
 // Retrieve final computed value <br>
 int power = attributes.GetCurrentAttribute(AttributeKey_Power); // Expected: 8 <br>
-</blockquote>
+</pre>
 
 ### Installation & Integration
 
