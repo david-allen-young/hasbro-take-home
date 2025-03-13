@@ -58,7 +58,7 @@ private:
 
 	int calculateAttribute(AttributeKey attribute) const;
 	void updateAttribute(const Effect& effect, int& result) const;
-	bool flattenOperations(const Effect& effect);
+	bool updateIncrementally(const Effect& effect);
 
 	bool isValidAttributeKey(AttributeKey attribute) const;
 	void logError(AttributeKey attribute) const;

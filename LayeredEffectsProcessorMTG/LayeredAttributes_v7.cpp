@@ -62,16 +62,19 @@ void LayeredAttributes_v7::AddLayeredEffect(LayeredEffectDefinition effectDef)
 	size_t timestamp = getNextTimestamp();
 	auto effect = Effect(effectDef, timestamp);
 	AttributeKey attribute = effect.getAttribute();
-	updateAttribute(effect, cache[attribute]);
-	attributeDirty[attribute] = true;
-	if (effects[attribute].size() + 1 > reservationSize)
+	if (updateIncrementally(effect))
 	{
-		effects[attribute].reserve(effects.size() + reservationSize);
+		updateAttribute(effect, cache[attribute]);
 	}
-	if (!flattenOperations(effect))
+	else
 	{
+		if (effects[attribute].size() + 1 > reservationSize)
+		{
+			effects[attribute].reserve(effects.size() + reservationSize);
+		}
 		auto it = std::lower_bound(effects[attribute].begin(), effects[attribute].end(), effect, EffectComparator());
 		effects[attribute].insert(it, effect);
+		attributeDirty[attribute] = true;
 	}
 }
 
@@ -156,45 +159,54 @@ void LayeredAttributes_v7::updateAttribute(const Effect& effect, int& result) co
 	}
 }
 
-bool LayeredAttributes_v7::flattenOperations(const Effect& effect)
+bool LayeredAttributes_v7::updateIncrementally(const Effect& effect)
 {
 	bool flattened = false;
-	auto attribute = effect.getAttribute();
+	bool appended = false;
+	AttributeKey attribute = effect.getAttribute();
 	if (!effects[attribute].empty())
 	{
 		auto& oldEffect = effects[attribute].back();
 		auto operation = oldEffect.getOperation();
-		if (operation == effect.getOperation() && oldEffect.getLayer() == effect.getLayer())
+		if (oldEffect.getLayer() == effect.getLayer())
 		{
-			int updatedModification = oldEffect.getModification();
-			if (operation == EffectOperation_Set)
+			if (operation == effect.getOperation())
 			{
-				updatedModification = effect.getModification();
-			}
-			else if (operation == EffectOperation_Add || operation == EffectOperation_Subtract)
-			{
-				updatedModification += effect.getModification();
-			}
-			else if (operation == EffectOperation_Multiply)
-			{
-				updatedModification *= effect.getModification();
-			}
-			else if (operation == EffectOperation_BitwiseOr)
-			{
-				updatedModification |= effect.getModification();
-			}
-			else if (operation == EffectOperation_BitwiseAnd)
-			{
-				updatedModification &= effect.getModification();
+				int updatedModification = oldEffect.getModification();
+				if (operation == EffectOperation_Set)
+				{
+					updatedModification = effect.getModification();
+				}
+				else if (operation == EffectOperation_Add || operation == EffectOperation_Subtract)
+				{
+					updatedModification += effect.getModification();
+				}
+				else if (operation == EffectOperation_Multiply)
+				{
+					updatedModification *= effect.getModification();
+				}
+				else if (operation == EffectOperation_BitwiseOr)
+				{
+					updatedModification |= effect.getModification();
+				}
+				else if (operation == EffectOperation_BitwiseAnd)
+				{
+					updatedModification &= effect.getModification();
+				}
+				else
+				{
+				}
+				oldEffect.updateModification(updatedModification);
+				flattened = true;
 			}
 			else
 			{
+				effects[attribute].push_back(effect);
+				appended = true;
 			}
-			oldEffect.updateModification(updatedModification);
-			flattened = true;
 		}
 	}
-	return flattened;
+	return flattened || appended;
 }
 
 
