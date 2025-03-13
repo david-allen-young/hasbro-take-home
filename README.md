@@ -17,16 +17,21 @@ This repository contains an implementation of a <b>Layered Attributes System</b>
 <b>Setting Base Attributes</b>
 <ul><li>Attributes start at a default value (0) and can be explicitly set using SetBaseAttribute(AttributeKey, int).</li></ul>
 </blockquote>
+
 <blockquote>
 <b>Applying Layered Effects</b>
 <ul><li>Effects are applied through AddLayeredEffect(LayeredEffectDefinition), modifying base attributes according to their operation type (e.g., add, multiply, set).</li></ul>
 </blockquote>
 
-#### Efficient Attribute Retrieval
-<blockquote>The system caches computed values for quick access using GetCurrentAttribute(AttributeKey), reducing redundant recalculations.</blockquote>
+<blockquote>
+<b>Efficient Attribute Retrieval</b>
+<ul><li>The system caches computed values for quick access using GetCurrentAttribute(AttributeKey), reducing redundant recalculations.</li></ul>
+</blockquote>
 
-#### Clearing Effects
-<blockquote>Reset all layered effects using ClearLayeredEffects(), reverting attributes to their base values.</blockquote>
+<blockquote>
+<b>Clearing Effects</b>
+<ul><li>Reset all layered effects using ClearLayeredEffects(), reverting attributes to their base values.</li></ul>
+</blockquote>
 
 #### Example Usage
 <pre>
