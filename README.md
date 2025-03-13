@@ -1,7 +1,7 @@
-# Layered Attributes System
+# Layered Effects Processor
 
 ### Overview
-This repository contains an implementation of a <b>Layered Attributes System</b>, designed to dynamically modify and manage game entity attributes through a structured layering system. The system allows for efficient calculation of final attribute values by applying various effects such as addition, subtraction, multiplication, and bitwise operations.
+This repository contains an implementation of a <b>Layered Effects Processor</b>, designed to dynamically modify and manage game entity attributes through a structured layering system. The system allows for efficient calculation of final attribute values by applying various effects such as addition, subtraction, multiplication, and bitwise operations.
 
 ### Features
 <ul>
