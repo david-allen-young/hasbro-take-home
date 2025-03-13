@@ -54,12 +54,16 @@ int power = attributes.GetCurrentAttribute(AttributeKey_Power); // Expected: 8 <
 </pre>
 
 ### Installation & Integration
-<ul>
-<li>Include the Header and Source Files</li>
-<blockquote>Ensure LayeredAttributes_v2.hpp and LayeredAttributes_v2.cpp are added to your project.</blockquote>
-<li>Compile with Your Project</li>
-<blockquote>This system is designed to be lightweight and does not require external dependencies.</blockquote>
-</ul>
+
+<blockquote>
+<b>Include the Header and Source Files</b>
+<ul><li>Ensure LayeredAttributes_v2.hpp and LayeredAttributes_v2.cpp are added to your project.</li></ul>
+</blockquote>
+
+<blockquote>
+<b>Compile with Your Project</b>
+<ul><li>This system is designed to be lightweight and does not require external dependencies.</li></ul>
+</blockquote>
 
 ### Potential Use Cases
 <ul>
