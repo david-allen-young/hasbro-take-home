@@ -112,6 +112,11 @@ This repository contains an implementation of a Layered Effects Processor, desig
    }
    ```
     * The system caches computed values for quick access using GetCurrentAttribute(AttributeKey), reducing redundant recalculations.
+    * If error logging is enabled and the AttributeKey fails validation, write an error to the log.
+    * If the attribute key has not been added to the cache yet, create it.
+    * If the attribute is newly created or was marked dirty, perform a full calculation.
+    * If a calculation was performed, store the result as the new cached value.
+    * Return the cached value.
  
       
 * **Clearing Effects**
