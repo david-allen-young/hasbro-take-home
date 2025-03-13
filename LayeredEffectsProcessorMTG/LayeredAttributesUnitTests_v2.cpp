@@ -1,9 +1,11 @@
 #include "LayeredAttributesUnitTests_v2.hpp"
 #include "LayeredAttributes_v6.hpp"
+#include "LayeredAttributes_v7.hpp"
 #include <assert.h>
 #include <iostream>
 
-using Implementation = LayeredAttributes_v6;
+//using Implementation = LayeredAttributes_v6;
+using Implementation = LayeredAttributes_v7;
 
 
 void LayeredAttributesUnitTests_v2::runOperationalTests()
