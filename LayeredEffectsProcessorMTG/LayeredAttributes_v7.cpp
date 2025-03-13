@@ -61,8 +61,20 @@ void LayeredAttributes_v7::AddLayeredEffect(LayeredEffectDefinition effectDef)
 	}
 	size_t timestamp = getNextTimestamp();
 	auto effect = Effect(effectDef, timestamp);
-	updateCachedAttribute(effect);
-	updateEffectsStorage(effect);
+	//updateCachedAttribute(effect);
+	AttributeKey attribute = effect.getAttribute();
+	updateAttribute(effect, cache[attribute]);
+	attributeDirty[attribute] = true;
+	//updateEffectsStorage(effect);
+	if (effects[attribute].size() + 1 > reservationSize)
+	{
+		effects[attribute].reserve(effects.size() + reservationSize);
+	}
+	if (!flattenOperations(effect))
+	{
+		auto it = std::lower_bound(effects[attribute].begin(), effects[attribute].end(), effect, EffectComparator());
+		effects[attribute].insert(it, effect);
+	}
 }
 
 //Removes all layered effects from this object. After this call,
@@ -158,6 +170,7 @@ void LayeredAttributes_v7::updateLayerValidation(const Effect& effect)
 	}
 }
 
+// unused
 void LayeredAttributes_v7::updateCachedAttribute(const Effect& effect)
 {
 	AttributeKey attribute = effect.getAttribute();
@@ -165,6 +178,7 @@ void LayeredAttributes_v7::updateCachedAttribute(const Effect& effect)
 	attributeDirty[attribute] = true;
 }
 
+// unused
 void LayeredAttributes_v7::updateEffectsStorage(const Effect& effect)
 {
 	auto attribute = effect.getAttribute();
