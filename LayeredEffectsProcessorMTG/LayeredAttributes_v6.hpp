@@ -8,11 +8,7 @@ class Effect
 {
 public:
 	Effect(LayeredEffectDefinition effectDef, size_t timestamp)
-	{
-		std::swap(effectDef, this->effectDef);
-		std::swap(timestamp, this->timestamp);
-	}
-	void nullify() { effectDef.Operation = EffectOperation_Invalid; }
+		: effectDef(std::move(effectDef)), timestamp(timestamp) {}
 	void updateModification(int modification) { effectDef.Modification = modification; }
 	AttributeKey getAttribute() const { return effectDef.Attribute; }
 	int getOperation() const { return effectDef.Operation; }
