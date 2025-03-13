@@ -4,11 +4,11 @@
 #include <map>
 #include <array>
 
-class LayeredAttributes_v4 : public ILayeredAttributes
+class LayeredAttributes_v1 : public ILayeredAttributes
 {
 public:
-	LayeredAttributes_v4(bool errorLoggingEnabled = false, bool errorHandlingEnabled = false, size_t rereservationSize = 10ULL);
-	virtual ~LayeredAttributes_v4() = default;
+	LayeredAttributes_v1(bool errorLoggingEnabled = false, bool errorHandlingEnabled = false, size_t rereservationSize = 10ULL);
+	virtual ~LayeredAttributes_v1() = default;
 	void SetBaseAttribute(AttributeKey attribute, int value) override;
 	int GetCurrentAttribute(AttributeKey attribute) const override;
 	void AddLayeredEffect(LayeredEffectDefinition effect) override;

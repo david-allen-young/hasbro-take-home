@@ -21,7 +21,7 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LayeredAttributes_v4.cpp">
+    <ClCompile Include="LayeredAttributes_v1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="LayeredAttributes_v7.cpp">
@@ -38,7 +38,7 @@
     <ClInclude Include="LayeredAttributes_v7.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="LayeredAttributes_v4.hpp">
+    <ClInclude Include="LayeredAttributes_v1.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="LayeredAttributesUnitTests_v2.hpp">
