@@ -139,6 +139,9 @@ void LayeredAttributesUnitTests_v2::testBitwise()
 	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_BitwiseAnd, /*modifier*/1, /*layer*/2 });
 	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_BitwiseAnd, /*modifier*/1, /*layer*/2 });
 	assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) == 1);
+	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_BitwiseXor, /*modifier*/2, /*layer*/2 });
+	std::cout << "Power==" << attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) << std::endl;
+	assert(attributes->GetCurrentAttribute(AttributeKey::AttributeKey_Power) == 3);
 	attributes->ClearLayeredEffects();
 	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_BitwiseOr, /*modifier*/1, /*layer*/2 });
 	attributes->AddLayeredEffect({ AttributeKey_Power, EffectOperation_BitwiseOr, /*modifier*/1, /*layer*/2 });
