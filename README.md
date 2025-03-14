@@ -167,7 +167,13 @@ This repository contains an implementation of a Layered Effects Processor, desig
 		return flattened || appended;
 	}
     ```
-    * TODO   
+    * LayeredAttributes_v2::updateIncrementally() attempts to flatten or append the most recent effect addition.
+    * It does this to avoid a full recalculation of all the modifications during attribute retrieval.
+    * First it determines if the incoming effect is in the same layer as the last effect added for the given attribute.
+    * Second it determines if the incoming effect has the same operation as the last effect.
+    * If the layers and operations are both the same, the system flattens the modifications and updates the last effect.
+    * If only the layers are the same, the system appends this affect to the end of the container.
+    * If neither of the above are true, the function returns false so the caller knows to mark the attribute dirty.
       
 * **Efficient Attribute Retrieval**
    ```cpp
