@@ -248,6 +248,14 @@ This repository contains an implementation of a Layered Effects Processor, desig
 		{
 			result &= effect.getModification();
 		}
+		else if (effect.getOperation() == EffectOperation_BitwiseXor)
+		{
+			result ^= effect.getModification();
+		}
+		else
+		{
+			// do nothing
+		}
 	}
     ```
     * LayeredAttributes_v2::**calculateAttribute()** is called by **::GetCurrentAttribute()** if the cache is **dirty** or does **not exist**.
