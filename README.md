@@ -37,22 +37,6 @@ This repository contains an implementation of a Layered Effects Processor, desig
     * Each container is preceded by the **mutable** keyword to allow for lazy evaluation during calls to **::GetCurrentAttribute()** from the client.
     * This is necessary because the pure **virtual** method **ILayeredAttributes::GetCurrentAttribute()** is specified as **const** in the interface file.
  
-* **Custom Comparator**
-    ```cpp
-	struct EffectComparator
-	{
-		bool operator()(const Effect& a, const Effect& b) const
-		{
-			if (a.getLayer() != b.getLayer())
-			{
-				return a.getLayer() < b.getLayer();
-			}
-			return a.getTimestamp() < b.getTimestamp();
-		}
-	};
-    ```
-    * LayeredAttributes_v2::**EffectComparator** is used to keep the effects container sorted by **{layer, timestamp}** during insertions.  
-
 * **Initialization**
    ```cpp
    LayeredAttributes_v2::LayeredAttributes_v2(bool errorLoggingEnabled, size_t reservationSize)
@@ -115,6 +99,75 @@ This repository contains an implementation of a Layered Effects Processor, desig
     * If the **incremental update** cannot proceed, insert this effect in priority order **{layer, timestamp}** using the **custom comparator**.
     * Mark the attribute **dirty** so that it will be **recalculated** upon retrieval.
  
+* **Custom Comparator**
+    ```cpp
+	struct EffectComparator
+	{
+		bool operator()(const Effect& a, const Effect& b) const
+		{
+			if (a.getLayer() != b.getLayer())
+			{
+				return a.getLayer() < b.getLayer();
+			}
+			return a.getTimestamp() < b.getTimestamp();
+		}
+	};
+    ```
+    * LayeredAttributes_v2::**EffectComparator** is used to keep the effects container sorted by **{layer, timestamp}** during insertions.
+      
+* **Incremental Update**
+    ```cpp
+	bool LayeredAttributes_v2::updateIncrementally(const Effect& effect)
+	{
+		bool flattened = false;
+		bool appended = false;
+		AttributeKey attribute = effect.getAttribute();
+		if (!effects[attribute].empty())
+		{
+			auto& oldEffect = effects[attribute].back();
+			auto operation = oldEffect.getOperation();
+			if (oldEffect.getLayer() == effect.getLayer())
+			{
+				if (operation == effect.getOperation())
+				{
+					int updatedModification = oldEffect.getModification();
+					if (operation == EffectOperation_Set)
+					{
+						updatedModification = effect.getModification();
+					}
+					else if (operation == EffectOperation_Add || operation == EffectOperation_Subtract)
+					{
+						updatedModification += effect.getModification();
+					}
+					else if (operation == EffectOperation_Multiply)
+					{
+						updatedModification *= effect.getModification();
+					}
+					else if (operation == EffectOperation_BitwiseOr)
+					{
+						updatedModification |= effect.getModification();
+					}
+					else if (operation == EffectOperation_BitwiseAnd)
+					{
+						updatedModification &= effect.getModification();
+					}
+					else
+					{
+					}
+					oldEffect.updateModification(updatedModification);
+					flattened = true;
+				}
+				else
+				{
+					effects[attribute].push_back(effect);
+					appended = true;
+				}
+			}
+		}
+		return flattened || appended;
+	}
+    ```
+    * TODO   
       
 * **Efficient Attribute Retrieval**
    ```cpp
