@@ -167,14 +167,14 @@ This repository contains an implementation of a Layered Effects Processor, desig
 		return flattened || appended;
 	}
     ```
-    * LayeredAttributes_v2::updateIncrementally() attempts to flatten or append the most recent effect addition.
-    * It does this to avoid a full recalculation of all the modifications during attribute retrieval.
-    * First it determines if the incoming effect is in the same layer as the last effect added for the given attribute.
-    * Second it determines if the incoming effect has the same operation as the last effect.
-    * If the layers and operations are both the same, the system flattens the modifications and updates the last effect.
-    * If only the layers are the same, the system appends this affect to the end of the container.
-    * If neither of the above are true, the function returns false so the caller knows to mark the attribute dirty.
-      
+    * LayeredAttributes_v2::**updateIncrementally()** attempts to **flatten** or **append** the most recent effect addition.
+    * It does this to **avoid a recalculation** of all the modifications during attribute retrieval.
+    * First it determines if the incoming effect is in the **same layer** as the last effect added for the given attribute.
+    * Second it determines if the incoming effect has the **same operation** as the last effect.
+    * If the layers and operations are **both the same**, the system **flattens** the modifications and updates the last effect.
+    * If **only the layers** are the same, the system **appends** this affect to the end of the container.
+    * If **neither** of the above are true, the function **returns false** so the caller knows to mark the attribute **dirty**.
+ 
 * **Efficient Attribute Retrieval**
    ```cpp
    int LayeredAttributes_v2::GetCurrentAttribute(AttributeKey attribute) const
@@ -206,8 +206,53 @@ This repository contains an implementation of a Layered Effects Processor, desig
     * If the attribute is newly created or was marked dirty, perform a full calculation.
     * If a calculation was performed, store the result as the new cached value.
     * Return the cached value.
- 
       
+* **Full Calculation**
+    ```cpp
+	int LayeredAttributes_v2::calculateAttribute(AttributeKey attribute) const
+	{
+		// the map defaults to zero if no key is present
+		int result = baseAttributes[attribute];
+	
+		for (auto& effect : effects[attribute])
+		{
+			updateAttribute(effect, result);
+		}
+	
+		return result;
+	}
+	
+	void LayeredAttributes_v2::updateAttribute(const Effect& effect, int& result) const
+	{
+		if (effect.getOperation() == EffectOperation_Set)
+		{
+			result = effect.getModification();
+		}
+		else if (effect.getOperation() == EffectOperation_Add)
+		{
+			result += effect.getModification();
+		}
+		else if (effect.getOperation() == EffectOperation_Subtract)
+		{
+			result -= effect.getModification();
+		}
+		else if (effect.getOperation() == EffectOperation_Multiply)
+		{
+			result *= effect.getModification();
+		}
+		else if (effect.getOperation() == EffectOperation_BitwiseOr)
+		{
+			result |= effect.getModification();
+		}
+		else if (effect.getOperation() == EffectOperation_BitwiseAnd)
+		{
+			result &= effect.getModification();
+		}
+	}
+    ```
+    * LayeredAttributes_v2::**calculateAttribute()** is called by **::GetCurrentAttribute()** if the cache is **dirty** or does **not exist**.
+    * LayeredAttributes_v2::**updateAttribute()** is called by **::calculateAttribute()** for each effect, **applying** the modifications to the **base**.
+ 
 * **Clearing Effects**
    ```cpp
    void LayeredAttributes_v2::ClearLayeredEffects()
