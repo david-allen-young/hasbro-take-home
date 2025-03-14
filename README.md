@@ -125,10 +125,15 @@ This repository contains an implementation of a Layered Effects Processor, desig
 		if (!effects[attribute].empty())
 		{
 			auto& oldEffect = effects[attribute].back();
-			auto operation = oldEffect.getOperation();
+			auto oldOperation = oldEffect.getOperation();
+			if (oldOperation == EffectOperation::EffectOperation_BitwiseXor)
+			{
+				return false;
+			}
 			if (oldEffect.getLayer() == effect.getLayer())
 			{
-				if (operation == effect.getOperation())
+				auto operation = effect.getOperation();
+				if (operation == oldOperation)
 				{
 					int updatedModification = oldEffect.getModification();
 					if (operation == EffectOperation_Set)
