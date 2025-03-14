@@ -119,57 +119,55 @@ This repository contains an implementation of a Layered Effects Processor, desig
     ```cpp
 	bool LayeredAttributes_v2::updateIncrementally(const Effect& effect)
 	{
-		bool flattened = false;
-		bool appended = false;
 		AttributeKey attribute = effect.getAttribute();
-		if (!effects[attribute].empty())
+		if (effects[attribute].empty())
 		{
-			auto& oldEffect = effects[attribute].back();
-			auto oldOperation = oldEffect.getOperation();
-			if (oldOperation == EffectOperation::EffectOperation_BitwiseXor)
-			{
-				return false;
-			}
-			if (oldEffect.getLayer() == effect.getLayer())
-			{
-				auto operation = effect.getOperation();
-				if (operation == oldOperation)
-				{
-					int updatedModification = oldEffect.getModification();
-					if (operation == EffectOperation_Set)
-					{
-						updatedModification = effect.getModification();
-					}
-					else if (operation == EffectOperation_Add || operation == EffectOperation_Subtract)
-					{
-						updatedModification += effect.getModification();
-					}
-					else if (operation == EffectOperation_Multiply)
-					{
-						updatedModification *= effect.getModification();
-					}
-					else if (operation == EffectOperation_BitwiseOr)
-					{
-						updatedModification |= effect.getModification();
-					}
-					else if (operation == EffectOperation_BitwiseAnd)
-					{
-						updatedModification &= effect.getModification();
-					}
-					else
-					{
-					}
-					oldEffect.updateModification(updatedModification);
-					flattened = true;
-				}
-				else
-				{
-					effects[attribute].push_back(effect);
-					appended = true;
-				}
-			}
+			return false;
 		}
-		return flattened || appended;
+		auto& oldEffect = effects[attribute].back();
+		if (oldEffect.getLayer() != effect.getLayer())
+		{
+			return false;
+		}
+		auto oldOperation = oldEffect.getOperation();
+		if (oldOperation == EffectOperation::EffectOperation_BitwiseXor)
+		{
+			return false;
+		}
+		auto operation = effect.getOperation();
+		if (operation == oldOperation)
+		{
+			int updatedModification = oldEffect.getModification();
+			if (operation == EffectOperation_Set)
+			{
+				updatedModification = effect.getModification();
+			}
+			else if (operation == EffectOperation_Add || operation == EffectOperation_Subtract)
+			{
+				updatedModification += effect.getModification();
+			}
+			else if (operation == EffectOperation_Multiply)
+			{
+				updatedModification *= effect.getModification();
+			}
+			else if (operation == EffectOperation_BitwiseOr)
+			{
+				updatedModification |= effect.getModification();
+			}
+			else if (operation == EffectOperation_BitwiseAnd)
+			{
+				updatedModification &= effect.getModification();
+			}
+			else
+			{
+			}
+			oldEffect.updateModification(updatedModification);
+		}
+		else
+		{
+			effects[attribute].push_back(effect);
+		}
+		return true;
 	}
     ```
     * LayeredAttributes_v2::**updateIncrementally()** attempts to **flatten** or **append** the most recent effect addition.
