@@ -156,6 +156,14 @@ void LayeredAttributes_v2::updateAttribute(const Effect& effect, int& result) co
 	{
 		result &= effect.getModification();
 	}
+	else if (effect.getOperation() == EffectOperation_BitwiseXor)
+	{
+		result ^= effect.getModification();
+	}
+	else
+	{
+		// do nothing
+	}
 }
 
 bool LayeredAttributes_v2::updateIncrementally(const Effect& effect)
@@ -166,10 +174,15 @@ bool LayeredAttributes_v2::updateIncrementally(const Effect& effect)
 	if (!effects[attribute].empty())
 	{
 		auto& oldEffect = effects[attribute].back();
-		auto operation = oldEffect.getOperation();
+		auto oldOperation = oldEffect.getOperation();
+		if (oldOperation == EffectOperation::EffectOperation_BitwiseXor)
+		{
+			return false;
+		}
 		if (oldEffect.getLayer() == effect.getLayer())
 		{
-			if (operation == effect.getOperation())
+			auto operation = effect.getOperation();
+			if (operation == oldOperation)
 			{
 				int updatedModification = oldEffect.getModification();
 				if (operation == EffectOperation_Set)
